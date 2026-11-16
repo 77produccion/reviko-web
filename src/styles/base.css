@@ -21,6 +21,9 @@ html {
   #how-it-works,
   #businesses,
   #benefits,
+  #calculadora,
+  #fundadores,
+  #faq,
   .anchor-alias
 ) {
   scroll-margin-top: calc(var(--header-h) + 1rem);

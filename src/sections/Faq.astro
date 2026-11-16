@@ -1,0 +1,98 @@
+---
+/* Preguntas frecuentes: responden las objeciones de venta. */
+import Eyebrow from "../components/Eyebrow.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+import type { Locale } from "../i18n/config";
+import { growth } from "../i18n/growth";
+
+export interface Props {
+  locale?: Locale;
+}
+const { locale = "es" } = Astro.props;
+const t = growth[locale].faq;
+---
+
+<section class="faq" id="faq" aria-labelledby="faq-title">
+  <div class="container faq-grid">
+    <div class="faq-side">
+      <Eyebrow>{t.eyebrow}</Eyebrow>
+      <h2 id="faq-title" class="display-sm" data-lines>
+        {t.title.map((line) => (
+          <span class="line"><span>{line}</span></span>
+        ))}
+      </h2>
+      <aside class="faq-aside on-dark" data-reveal>
+        <p class="aside-title">{t.asideTitle}</p>
+        <p class="aside-text">{t.asideText}</p>
+        <WhatsAppButton message={t.whatsappMsg} label={t.asideCta} variant="whatsapp" />
+      </aside>
+    </div>
+
+    <div class="faq-list" data-stagger>
+      {t.items.map((item, i) => (
+        <details class="faq-item" open={i === 0}>
+          <summary>
+            <span>{item.q}</span>
+            <span class="plus" aria-hidden="true"></span>
+          </summary>
+          <div class="answer"><p>{item.a}</p></div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq { padding: var(--section-space) 0; background: var(--reviko-cream); }
+  .faq-grid { display: grid; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  .faq-side .display-sm { margin-top: 1rem; }
+  .faq-aside {
+    margin-top: 2rem;
+    background: var(--reviko-green);
+    color: var(--reviko-cream);
+    border-radius: 22px;
+    padding: 1.5rem;
+    display: grid; gap: 0.5rem; justify-items: start;
+    max-width: 24rem;
+  }
+  .aside-title { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.03em; }
+  .aside-text { color: rgb(252 249 243 / 0.75); margin-bottom: 0.6rem; }
+
+  .faq-list { display: grid; gap: 0.7rem; }
+  .faq-item {
+    background: var(--reviko-card);
+    border: 1px solid rgb(11 42 29 / 0.1);
+    border-radius: 18px;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .faq-item[open] { border-color: rgb(11 42 29 / 0.22); box-shadow: var(--shadow-soft); }
+  summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    padding: 1.15rem 1.3rem;
+    font-weight: 800; font-size: 1.05rem; letter-spacing: -0.015em; color: var(--reviko-green);
+  }
+  summary::-webkit-details-marker { display: none; }
+  .plus {
+    position: relative; flex: none;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--reviko-cream-2);
+    transition: background 0.25s, transform 0.3s var(--ease-out);
+  }
+  .plus::before, .plus::after {
+    content: ""; position: absolute; left: 50%; top: 50%;
+    width: 12px; height: 2px; background: var(--reviko-green); border-radius: 2px;
+    transform: translate(-50%, -50%);
+  }
+  .plus::after { transform: translate(-50%, -50%) rotate(90deg); transition: transform 0.3s var(--ease-out); }
+  .faq-item[open] .plus { background: var(--reviko-lime); transform: rotate(180deg); }
+  .faq-item[open] .plus::after { transform: translate(-50%, -50%) rotate(0deg); }
+  .answer { padding: 0 1.3rem 1.25rem; }
+  .answer p { color: var(--reviko-sage); line-height: 1.6; max-width: 60ch; }
+
+  @media (min-width: 980px) {
+    .faq-grid { grid-template-columns: 0.8fr 1.2fr; }
+    .faq-side { position: sticky; top: calc(var(--header-h) + 2rem); }
+  }
+</style>

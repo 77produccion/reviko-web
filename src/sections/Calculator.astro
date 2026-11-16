@@ -1,0 +1,277 @@
+---
+/* Calculadora "¿Cuánto vale un cliente que vuelve?".
+   Todo el cálculo corre en el navegador; sin dependencias. */
+import Eyebrow from "../components/Eyebrow.astro";
+import ArrowButton from "../components/ArrowButton.astro";
+import type { Locale } from "../i18n/config";
+import { APP_SIGNUP_URL, usdToCop, formatCop } from "../i18n/config";
+import { growth } from "../i18n/growth";
+
+export interface Props {
+  locale?: Locale;
+}
+const { locale = "es" } = Astro.props;
+const t = growth[locale].calculator;
+
+/* Valores por defecto: barbería/cafetería típica del Eje Cafetero */
+const defaults = { customers: 300, ticket: 25000, rate: 15 };
+const proCop = usdToCop(20);
+const extra = Math.round(defaults.customers * (defaults.rate / 100) * defaults.ticket);
+const roi = Math.round(extra / proCop);
+---
+
+<section class="calc" id="calculadora" aria-labelledby="calc-title">
+  <div class="container calc-grid">
+    <div class="calc-copy">
+      <Eyebrow>{t.eyebrow}</Eyebrow>
+      <h2 id="calc-title" class="display-sm" data-lines>
+        {t.title.map((line) => (
+          <span class="line"><span>{line}</span></span>
+        ))}
+      </h2>
+      <p class="calc-sub" data-reveal>{t.sub}</p>
+      <p class="calc-disclaimer" data-reveal>{t.disclaimer}</p>
+    </div>
+
+    <div
+      class="calc-card on-dark"
+      data-calc
+      data-locale={locale}
+      data-pro-cop={proCop}
+      data-reveal="scale"
+    >
+      <div class="calc-fields">
+        <label class="field">
+          <span class="field-top">
+            <span>{t.customers}</span>
+            <output data-out="customers">{formatCop(defaults.customers, locale)}</output>
+          </span>
+          <input type="range" min="50" max="1500" step="10" value={defaults.customers} data-in="customers" />
+        </label>
+        <label class="field">
+          <span class="field-top">
+            <span>{t.ticket}</span>
+            <output data-out="ticket">${formatCop(defaults.ticket, locale)}</output>
+          </span>
+          <input type="range" min="5000" max="150000" step="1000" value={defaults.ticket} data-in="ticket" />
+        </label>
+        <label class="field">
+          <span class="field-top">
+            <span>{t.returnRate}</span>
+            <output data-out="rate">{defaults.rate}%</output>
+          </span>
+          <input type="range" min="5" max="40" step="1" value={defaults.rate} data-in="rate" />
+        </label>
+      </div>
+
+      <div class="calc-result" aria-live="polite">
+        <p class="result-label">{t.resultLabel}</p>
+        <p class="result-value">
+          <span class="cur">$</span><span data-out="extra">{formatCop(extra, locale)}</span>
+          <span class="cop">COP</span>
+        </p>
+        <p class="result-year">
+          ≈ $<span data-out="year">{formatCop(extra * 12, locale)}</span> COP {t.resultYear}
+        </p>
+        <div class="result-compare">
+          <div>
+            <p class="mini-label">{t.costLabel}</p>
+            <p class="mini-value">${formatCop(proCop, locale)}<small>{t.perMonth}</small></p>
+          </div>
+          <div class="roi">
+            <p class="mini-label">{t.roiLabel}</p>
+            <p class="mini-value lime"><span data-out="roi">{roi}</span>{t.roiSuffix}</p>
+          </div>
+        </div>
+        <div class="calc-cta">
+          <ArrowButton href={APP_SIGNUP_URL} variant="lime" label={t.cta} />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function initCalculator() {
+    document.querySelectorAll<HTMLElement>("[data-calc]").forEach((card) => {
+      if (card.dataset.ready) return;
+      card.dataset.ready = "1";
+      const locale = card.dataset.locale === "en" ? "en-US" : "es-CO";
+      const proCop = Number(card.dataset.proCop) || 64000;
+      const fmt = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 });
+      const input = (k: string) => card.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
+      const out = (k: string) => card.querySelector<HTMLElement>(`[data-out="${k}"]`);
+      let shown = 0;
+      let raf = 0;
+
+      const paintRange = (el: HTMLInputElement) => {
+        const pct = ((+el.value - +el.min) / (+el.max - +el.min)) * 100;
+        el.style.setProperty("--fill", `${pct}%`);
+      };
+
+      const animateTo = (target: number) => {
+        cancelAnimationFrame(raf);
+        const from = shown;
+        const start = performance.now();
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const step = (now: number) => {
+          const p = reduce ? 1 : Math.min((now - start) / 420, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          shown = Math.round(from + (target - from) * eased);
+          const el = out("extra");
+          if (el) el.textContent = fmt.format(shown);
+          if (p < 1) raf = requestAnimationFrame(step);
+        };
+        raf = requestAnimationFrame(step);
+      };
+
+      const update = (animate = true) => {
+        const customers = +input("customers").value;
+        const ticket = +input("ticket").value;
+        const rate = +input("rate").value;
+        const extra = Math.round(customers * (rate / 100) * ticket);
+        out("customers")!.textContent = fmt.format(customers);
+        out("ticket")!.textContent = `$${fmt.format(ticket)}`;
+        out("rate")!.textContent = `${rate}%`;
+        out("year")!.textContent = fmt.format(extra * 12);
+        out("roi")!.textContent = fmt.format(Math.max(0, Math.round(extra / proCop)));
+        ["customers", "ticket", "rate"].forEach((k) => paintRange(input(k)));
+        if (animate) animateTo(extra);
+        else {
+          shown = extra;
+          out("extra")!.textContent = fmt.format(extra);
+        }
+      };
+
+      card.querySelectorAll<HTMLInputElement>("input[type=range]").forEach((el) =>
+        el.addEventListener("input", () => update()),
+      );
+      update(false);
+    });
+  }
+  document.addEventListener("astro:page-load", initCalculator);
+  initCalculator();
+</script>
+
+<style>
+  .calc {
+    padding: var(--section-space) 0;
+    background: var(--reviko-cream-2);
+    border-top: 1px solid rgb(11 42 29 / 0.08);
+  }
+  .calc-grid {
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .calc-copy .display-sm { margin-top: 1rem; color: var(--reviko-ink); }
+  .calc-sub { margin-top: 1.2rem; max-width: 30rem; color: var(--reviko-sage); font-size: 1.08rem; }
+  .calc-disclaimer {
+    margin-top: 1.4rem; max-width: 28rem; font-size: 0.78rem; color: var(--reviko-sage);
+    padding-left: 0.9rem; border-left: 2px solid var(--reviko-lime-deep);
+  }
+
+  .calc-card {
+    position: relative;
+    background: var(--reviko-green);
+    color: var(--reviko-cream);
+    border-radius: 28px;
+    padding: clamp(1.4rem, 3vw, 2.2rem);
+    display: grid;
+    gap: 1.8rem;
+    box-shadow: 0 40px 80px -40px rgb(8 31 21 / 0.6);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .calc-card::before {
+    content: "";
+    position: absolute;
+    inset: -40% -30% auto auto;
+    width: 70%;
+    aspect-ratio: 1;
+    background: radial-gradient(circle, rgb(199 249 121 / 0.22), transparent 65%);
+    z-index: -1;
+  }
+
+  .calc-fields { display: grid; gap: 1.4rem; }
+  .field { display: grid; gap: 0.7rem; }
+  .field-top {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+    font-size: 0.9rem; color: rgb(252 249 243 / 0.78);
+  }
+  .field-top output {
+    font-weight: 800; font-size: 1.1rem; color: var(--reviko-cream);
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  input[type="range"] {
+    --fill: 50%;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      var(--reviko-lime) 0 var(--fill),
+      rgb(252 249 243 / 0.16) var(--fill) 100%
+    );
+    outline-offset: 6px;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--reviko-cream);
+    border: 6px solid var(--reviko-lime);
+    box-shadow: 0 4px 14px rgb(0 0 0 / 0.35);
+    transition: transform 0.2s var(--ease-out);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--reviko-cream);
+    border: 6px solid var(--reviko-lime);
+  }
+  input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.15); }
+
+  .calc-result {
+    background: rgb(252 249 243 / 0.06);
+    border: 1px solid rgb(252 249 243 / 0.12);
+    border-radius: 20px;
+    padding: 1.4rem;
+  }
+  .result-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--reviko-lime-soft);
+  }
+  .result-value {
+    margin-top: 0.5rem;
+    display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.15rem;
+    font-size: clamp(2.6rem, 6vw, 4.2rem);
+    font-weight: 800; letter-spacing: -0.05em; line-height: 1;
+    color: var(--reviko-lime);
+    font-variant-numeric: tabular-nums;
+  }
+  .result-value .cur { font-size: 0.55em; }
+  .result-value .cop { font-size: 0.28em; letter-spacing: 0.06em; margin-left: 0.45rem; color: rgb(252 249 243 / 0.7); }
+  .result-year { margin-top: 0.45rem; font-size: 0.9rem; color: rgb(252 249 243 / 0.7); }
+  .result-compare {
+    margin-top: 1.2rem; padding-top: 1.1rem;
+    border-top: 1px dashed rgb(252 249 243 / 0.2);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  }
+  .mini-label { font-size: 0.78rem; color: rgb(252 249 243 / 0.68); line-height: 1.3; }
+  .mini-value { margin-top: 0.3rem; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .mini-value small { font-size: 0.8rem; font-weight: 700; color: rgb(252 249 243 / 0.6); margin-left: 0.2rem; }
+  .mini-value.lime { color: var(--reviko-lime); font-size: 2rem; }
+  .calc-cta { margin-top: 1.3rem; }
+  .calc-cta :global(.btn) { width: 100%; justify-content: center; }
+  .calc-cta :global(.btn span) { white-space: nowrap; }
+  @media (max-width: 639px) {
+    .calc-result { padding: 1.1rem; }
+    .calc-cta :global(.btn) { font-size: 0.92rem; padding-inline: 1rem; }
+    .result-compare { gap: 0.7rem; }
+  }
+
+  @media (min-width: 980px) {
+    .calc-grid { grid-template-columns: 0.9fr 1.1fr; }
+  }
+</style>

@@ -16,6 +16,30 @@ export const APP_URL = "https://app.reviko.io";
 /** Alta de nuevos negocios / registro en la app. */
 export const APP_SIGNUP_URL = `${APP_URL}/registro`;
 
+/** WhatsApp comercial de reviko (formato internacional, solo dígitos).
+ *  TODO(Jordan): confirmar que este es el número de ventas de reviko. */
+export const WHATSAPP_NUMBER = "573148490955";
+
+/** Enlace wa.me con mensaje prellenado. */
+export function whatsappLink(message: string): string {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+/** Tasa de referencia COP por USD para mostrar precios aproximados en pesos.
+ *  Stripe cobra en USD; esto es solo orientativo. Revisar cada trimestre. */
+export const COP_PER_USD = 3200;
+
+/** Convierte USD a COP redondeado al millar más cercano. */
+export function usdToCop(usd: number): number {
+  return Math.round((usd * COP_PER_USD) / 1000) * 1000;
+}
+
+export function formatCop(value: number, locale: "es" | "en" = "es"): string {
+  return new Intl.NumberFormat(locale === "es" ? "es-CO" : "en-US", {
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
 export function localizedPath(path: string, locale: Locale): string {
   if (locale === DEFAULT_LOCALE) return path;
   return path === "/" ? "/en/" : `/en${path}`;

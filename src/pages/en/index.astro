@@ -9,20 +9,61 @@ import Pricing from "../../sections/Pricing.astro";
 import Industries from "../../sections/Industries.astro";
 import RewardWays from "../../sections/RewardWays.astro";
 import FinalCta from "../../sections/FinalCta.astro";
+import Calculator from "../../sections/Calculator.astro";
+import Founders from "../../sections/Founders.astro";
+import Faq from "../../sections/Faq.astro";
+import WhatsAppFloat from "../../components/WhatsAppFloat.astro";
 
 const locale = "en" as const;
+
+import { ui } from "../../i18n/ui";
+import { growth } from "../../i18n/growth";
+import { SITE_URL } from "../../i18n/config";
+
+/* Datos estructurados: producto (con precios) + preguntas frecuentes */
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "reviko",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "iOS, Android, Web",
+    url: SITE_URL,
+    description: ui[locale].meta.description,
+    offers: ui[locale].pricing.plans.map((plan) => ({
+      "@type": "Offer",
+      name: plan.name,
+      price: plan.price,
+      priceCurrency: "USD",
+    })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: growth[locale].faq.items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  },
+];
 ---
 
 <BaseLayout locale={locale} basePath="/">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
   <Header locale={locale} basePath="/" />
   <main id="contenido">
     <Hero locale={locale} />
     <Problem locale={locale} />
     <HowItWorks locale={locale} />
+    <Calculator locale={locale} />
     <ProductShowcase locale={locale} />
-    <Pricing locale={locale} />
     <Industries locale={locale} />
     <RewardWays locale={locale} />
+    <Founders locale={locale} />
+    <Pricing locale={locale} />
+    <Faq locale={locale} />
     <FinalCta locale={locale} />
   </main>
+  <WhatsAppFloat locale={locale} />
 </BaseLayout>

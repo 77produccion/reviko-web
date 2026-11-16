@@ -1,15 +1,23 @@
 ---
+/* Industrias en formato mosaico (escritorio) y carrusel deslizable (móvil).
+   Antes eran 5 bloques de pantalla completa; ahora se ven todas de un vistazo. */
 import Eyebrow from "../components/Eyebrow.astro";
 import RewardProgress from "../components/RewardProgress.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
 import type { Locale } from "../i18n/config";
 import { ui } from "../i18n/ui";
+import { growth } from "../i18n/growth";
 
 export interface Props {
   locale?: Locale;
 }
 const { locale = "es" } = Astro.props;
 const t = ui[locale].industries;
-const industries = t.list;
+const g = growth[locale].industriesCta;
+
+/* Orden por prioridad comercial: barberías y cafeterías primero */
+const order = ["barberia", "cafeteria", "unas", "restaurante", "autolavado"];
+const industries = [...t.list].sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
 
 const iconFor = (id: string) =>
   id === "barberia" ? "cut" : id === "autolavado" ? "car" : id === "unas" ? "flower" : id === "restaurante" ? "fork" : "coffee";
@@ -17,7 +25,7 @@ const iconFor = (id: string) =>
 
 <section class="industries" id="businesses" aria-labelledby="ind-title">
   <span class="anchor-alias" id="negocios" aria-hidden="true"></span>
-  <div class="container">
+  <div class="container ind-head">
     <Eyebrow>{t.eyebrow}</Eyebrow>
     <h2 id="ind-title" class="display-sm" data-lines>
       {t.title.map((line) => (
@@ -25,20 +33,24 @@ const iconFor = (id: string) =>
       ))}
     </h2>
   </div>
-  <div class="panels">
-    {
-      industries.map((ind, i) => (
-        <article class:list={["panel", ind.dark && "is-dark", i % 2 === 1 && "flip"]}>
-          <div class="container panel-grid">
-            <div class="panel-copy">
-              <div data-reveal="fade"><Eyebrow dark={ind.dark}>{ind.eyebrow}</Eyebrow></div>
-              <h3 data-lines>
-                {ind.headline.split(". ").map((part, pi, arr) => (
-                  <span class="line"><span>{part}{pi < arr.length - 1 ? "." : ""}</span></span>
-                ))}
-              </h3>
-              <p data-reveal="up">{ind.sub}</p>
-              <div class:list={[{ "on-dark": ind.dark }]}>
+
+  <div class="container">
+    <ul class="ind-grid" data-stagger>
+      {
+        industries.map((ind, i) => (
+          <li class:list={["tile", i === 0 && "tile-lead"]}>
+            <img
+              src={ind.image}
+              alt={`${ind.eyebrow} — ${ind.imageAlt}`}
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="tile-shade" aria-hidden="true" />
+            <div class="tile-copy on-dark">
+              <Eyebrow dark>{ind.eyebrow}</Eyebrow>
+              <h3>{ind.headline}</h3>
+              <p>{ind.sub}</p>
+              <div class="tile-stamps">
                 <RewardProgress
                   total={ind.stamps.total}
                   filled={ind.stamps.filled}
@@ -46,56 +58,149 @@ const iconFor = (id: string) =>
                 />
               </div>
             </div>
-            <figure class="panel-media" data-media data-parallax={i % 2 ? "5" : "-5"}>
-              <img
-                src={ind.image}
-                alt={`${ind.eyebrow} — ${ind.imageAlt}`}
-                loading="lazy"
-                decoding="async"
-                style={`aspect-ratio: ${ind.ratio}`}
-              />
-            </figure>
-          </div>
-        </article>
-      ))
-    }
+          </li>
+        ))
+      }
+      <li class="tile tile-cta">
+        <div class="cta-mark" aria-hidden="true">
+          <img src="/reviko-la-vuelta.svg" alt="" width="120" height="120" loading="lazy" />
+        </div>
+        <div class="cta-text">
+          <h3>{g.title}</h3>
+          <p>{g.text}</p>
+        </div>
+        <WhatsAppButton message={g.whatsappMsg} label={g.cta} variant="primary" />
+      </li>
+    </ul>
   </div>
 </section>
 
 <style>
-  .industries { padding: var(--section-space) 0 0; background: var(--reviko-cream); }
-  .industries .container > .display-sm { margin-top: 1rem; }
-  .panels { margin-top: 3rem; display: grid; }
-  .panel { padding: clamp(3rem, 6vw, 4rem) 0; border-top: 1px solid rgb(11 42 29 / 0.12); }
-  .panel.is-dark { background: var(--reviko-green); color: var(--reviko-cream); border-top-color: transparent; }
-  .panel-grid { display: grid; gap: 2rem; align-items: center; }
-  .panel-copy h3 {
-    font-size: clamp(2rem, 4.5vw, 3.8rem);
-    margin: 1rem 0;
+  .industries {
+    padding: var(--section-space) 0;
+    background: var(--reviko-cream);
+  }
+  .ind-head .display-sm { margin-top: 1rem; }
+
+  .ind-grid {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: clamp(300px, 30vw, 380px);
+  }
+  .tile {
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--reviko-green);
+  }
+  .tile-lead { grid-row: span 2; }
+  .tile > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    transition: transform 0.9s var(--ease-out);
+  }
+  .tile:hover > img { transform: scale(1.05); }
+  .tile-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      rgb(8 31 21 / 0) 30%,
+      rgb(8 31 21 / 0.55) 58%,
+      rgb(8 31 21 / 0.92) 100%
+    );
+  }
+  .tile-copy {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: clamp(1.1rem, 2vw, 1.6rem);
+    color: var(--reviko-cream);
+    display: grid;
+    gap: 0.5rem;
+  }
+  .tile-copy h3 {
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+    line-height: 1;
+    color: var(--reviko-cream);
+  }
+  .tile-lead .tile-copy h3 { font-size: clamp(2rem, 3.6vw, 3.2rem); }
+  .tile-copy p { font-size: 0.9rem; color: rgb(252 249 243 / 0.8); }
+  .tile-stamps { margin-top: 0.4rem; }
+  .tile-stamps :global(.stamp) { max-width: 30px; }
+  .tile-lead .tile-stamps :global(.stamp) { max-width: 40px; }
+
+  .tile-cta {
+    background: var(--reviko-lime);
     color: var(--reviko-green);
+    padding: clamp(1.3rem, 2.4vw, 1.8rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.7rem;
   }
-  .panel.is-dark .panel-copy h3 { color: var(--reviko-cream); }
-  .panel-copy p { color: var(--reviko-sage); margin-bottom: 1.4rem; max-width: 26rem; }
-  .panel.is-dark .panel-copy p { color: rgb(252 249 243 / 0.78); }
-  .panel-media { margin: 0; overflow: hidden; border-radius: 12px; }
-  .panel-media img {
-    width: 100%; height: 100%; object-fit: cover;
-    border-radius: 12px; border: 1px solid rgb(11 42 29 / 0.14);
-    min-height: 280px;
-  }
-  .panel.is-dark .panel-media img { border-color: rgb(252 249 243 / 0.2); }
+  .tile-cta h3 { font-size: clamp(1.6rem, 2.4vw, 2.1rem); line-height: 1; }
+  .tile-cta p { font-size: 0.95rem; color: var(--reviko-green-3); max-width: 28ch; margin-top: 0.5rem; }
+  .tile-cta :global(.btn) { align-self: flex-start; margin-top: 0.4rem; }
   @media (min-width: 980px) {
-    .panel-grid { grid-template-columns: 1fr 1fr; gap: 4rem; }
-    .panel.flip .panel-copy { order: 2; }
-    .panel.flip .panel-media { order: 1; }
+    .tile-cta {
+      grid-column: 1 / -1;
+      height: auto;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 2rem;
+      padding: 1.8rem 2.2rem;
+    }
+    .tile-cta :global(.btn) { align-self: center; margin-top: 0; }
+    .tile-cta p { max-width: 52ch; }
+    .tile-cta .cta-mark { position: static; width: 64px; opacity: 1; }
   }
+  .ind-grid:has(.tile-cta) { grid-auto-rows: clamp(300px, 30vw, 380px); }
+  @media (min-width: 980px) {
+    .ind-grid { grid-template-rows: repeat(2, clamp(300px, 30vw, 380px)) auto; grid-auto-rows: auto; }
+    .ind-grid:has(.tile-cta) { grid-auto-rows: auto; }
+  }
+  .cta-mark {
+    position: absolute;
+    top: -18px;
+    right: -18px;
+    width: 140px;
+    opacity: 0.18;
+  }
+
+  /* Tablet: 2 columnas */
+  @media (max-width: 979px) {
+    .ind-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 340px; }
+    .tile-lead { grid-row: span 1; grid-column: span 2; }
+  }
+
+  /* Móvil: carrusel horizontal con snap */
   @media (max-width: 639px) {
-    .industries { padding-top: var(--section-space); }
-    .industries .container > .display-sm { max-width: 14ch; }
-    .panels { margin-top: 2rem; }
-    .panel { padding: 2.5rem 0; }
-    .panel-copy h3 { font-size: clamp(2rem, 9.5vw, 2.85rem); }
-    .panel-copy p { margin-bottom: 1rem; }
-    .panel-media img { min-height: 0; max-height: 420px; }
+    .ind-grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 0.8rem;
+      margin-inline: calc(var(--page-gutter) * -1);
+      padding: 0 var(--page-gutter) 0.6rem;
+      scrollbar-width: none;
+    }
+    .ind-grid::-webkit-scrollbar { display: none; }
+    .tile {
+      flex: 0 0 82%;
+      height: 440px;
+      scroll-snap-align: center;
+    }
+    .tile-lead .tile-copy h3 { font-size: 2rem; }
   }
 </style>
