@@ -42,6 +42,15 @@ Alineadas con la estrategia de marketing de reviko:
 - Planes Starter, Pro y Ultimate: los `id` (`start`, `pro`, `ultimate`) coinciden con los lookup keys de Stripe y viajan al registro como `?plan=`
 - Imagen para compartir en redes/WhatsApp: `public/og-reviko.jpg` (1200×630)
 
+## Demo en vivo para ventas (`/demo`, `/en/demo`)
+
+Presentación de 4 pasos para reuniones: escanear el QR real, guardar en Wallet, sumar sellos y cierre con CTA.
+No se indexa (`noindex`). Flechas ← → para avanzar, barra espaciadora para sumar un sello en pantalla.
+
+- Programa de demostración: `DEMO_PROGRAM` en `src/i18n/demo.ts` (enlace de inscripción, nombre del negocio, n.º de visitas)
+- QR: `public/demo/qr-demo.svg` (reemplazar por el que genera la app si cambia el programa)
+- La tarjeta del paso 3 es ilustrativa; la tarjeta real se actualiza en el Wallet del prospecto al escanearla desde la app
+
 ## Rutas legales
 
 ES (default, raíz): `/terms` · `/privacy` · `/merchant-terms` · `/loyalty-terms` ·

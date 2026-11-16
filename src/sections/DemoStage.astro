@@ -1,0 +1,553 @@
+---
+/* Demo en vivo: presentación de 4 pasos para reuniones de venta. */
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+import ArrowButton from "../components/ArrowButton.astro";
+import type { Locale } from "../i18n/config";
+import { APP_SIGNUP_URL, localizedHomeAnchor, localizedPath } from "../i18n/config";
+import { demo, DEMO_PROGRAM } from "../i18n/demo";
+
+export interface Props {
+  locale?: Locale;
+}
+const { locale = "es" } = Astro.props;
+const t = demo[locale];
+const P = DEMO_PROGRAM;
+const stamps = Array.from({ length: P.visits }, (_, i) => i);
+const cup = "M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z M7 2v2 M11 2v2 M15 2v2";
+const gift = "M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7s-1.5-5-4.5-5S4 7 12 7ZM12 7s1.5-5 4.5-5S20 7 12 7Z";
+---
+
+<div class="demo on-dark" data-demo data-visits={P.visits}>
+  <header class="demo-bar">
+    <a href={localizedPath("/", locale)} class="demo-brand" aria-label={t.exit}>
+      <img src="/reviko-la-vuelta.svg" alt="" width="30" height="30" />
+      <span>reviko</span>
+      <em>demo</em>
+    </a>
+    <ol class="demo-steps" aria-label="Progreso">
+      {t.steps.map((label, i) => (
+        <li>
+          <button type="button" data-goto={i} class:list={[i === 0 && "is-current"]}>
+            <span class="n">{i + 1}</span><span class="l">{label}</span>
+          </button>
+        </li>
+      ))}
+    </ol>
+    <a href={localizedPath("/", locale)} class="demo-exit" aria-label={t.exit}>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </a>
+  </header>
+
+  <main class="demo-stage" id="contenido">
+    <!-- Paso 1 -->
+    <section class="slide is-active" data-slide="0" aria-labelledby="d1">
+      <div class="slide-copy">
+        <p class="kicker">{t.s1.eyebrow}</p>
+        <h1 id="d1">{t.s1.title[0]}<br /><span class="lime">{t.s1.title[1]}</span></h1>
+        <p class="lead">{t.s1.sub}</p>
+        <p class="pill-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>
+          {t.s1.timer}
+        </p>
+        <a class="btn btn-lime mobile-open" href={P.joinUrl} target="_blank" rel="noopener" data-track="demo-open">
+          <span>{t.s1.mobileCta}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="slide-visual">
+        <div class="qr-wrap">
+          <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span>
+          <a class="qr-card" href={P.joinUrl} target="_blank" rel="noopener">
+            <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+            <img src={P.qrImage} alt="QR" width="512" height="512" />
+            <span class="scanline"></span>
+          </a>
+          <p class="qr-caption">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
+            {t.s1.qrCaption}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Paso 2 -->
+    <section class="slide" data-slide="1" aria-labelledby="d2">
+      <div class="slide-copy">
+        <p class="kicker">{t.s2.eyebrow}</p>
+        <h1 id="d2">{t.s2.title[0]}<br /><span class="lime">{t.s2.title[1]}</span></h1>
+        <p class="lead">{t.s2.sub}</p>
+        <ul class="checks">
+          {t.s2.points.map((p) => <li>{p}</li>)}
+        </ul>
+      </div>
+      <div class="slide-visual">
+        <div class="phone">
+          <div class="island"></div>
+          <div class="wallet-stack">
+            <div class="bank b1"></div>
+            <div class="bank b2"></div>
+            <div class="pass pass-drop">
+              <div class="pass-head">
+                <img src="/reviko-la-vuelta.svg" alt="" width="26" height="26" />
+                <div><strong>{P.shop}</strong><small>{t.s2.passLabel}</small></div>
+              </div>
+              <div class="pass-body">
+                <small>{t.s2.passMember}</small>
+                <strong>0 / {P.visits}</strong>
+              </div>
+              <div class="pass-code"></div>
+            </div>
+          </div>
+          <div class="wallet-btn"><span class="w-default">{t.s2.walletBtn}</span><span class="w-done">✓ {t.s2.added}</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Paso 3 -->
+    <section class="slide" data-slide="2" aria-labelledby="d3">
+      <div class="slide-copy">
+        <p class="kicker">{t.s3.eyebrow}</p>
+        <h1 id="d3">{t.s3.title[0]}<br /><span class="lime">{t.s3.title[1]}</span></h1>
+        <p class="lead">{t.s3.sub}</p>
+        <div class="stamp-actions">
+          <button type="button" class="btn btn-lime" data-stamp-btn>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span>{t.s3.stampBtn}</span>
+          </button>
+          <span class="hint">{t.s3.stampHint}</span>
+        </div>
+        <p class="mirror-note">{t.s3.mirrorNote}</p>
+      </div>
+      <div class="slide-visual">
+        <div class="bigpass" data-bigpass>
+          <div class="pass-head">
+            <img src="/reviko-la-vuelta.svg" alt="" width="34" height="34" />
+            <div><strong>{P.shop}</strong><small>{t.s2.passLabel}</small></div>
+            <span class="count"><b data-count>0</b> / {P.visits}<small>{t.s3.progress}</small></span>
+          </div>
+          <div class="stamp-grid" style={`--cols:${Math.min(5, P.visits)}`}>
+            {stamps.map((i) => (
+              <span class="st" data-st={i}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={i === P.visits - 1 ? gift : cup} /></svg>
+              </span>
+            ))}
+          </div>
+          <div class="bar"><span data-bar></span></div>
+          <p class="left" data-left-wrap>{t.s3.left} <b data-left>{P.visits}</b> {t.s3.leftSuffix}</p>
+          <div class="unlocked" data-unlocked aria-live="polite">
+            <span class="gift-badge">
+              <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={gift} /></svg>
+            </span>
+            <div>
+              <strong>{t.s3.unlockedTitle}</strong>
+              <span>{t.reward} · {t.s3.unlockedSub}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Paso 4 -->
+    <section class="slide slide-final" data-slide="3" aria-labelledby="d4">
+      <div class="slide-copy">
+        <p class="kicker">{t.s4.eyebrow}</p>
+        <h1 id="d4">{t.s4.title[0]}<br /><span class="lime">{t.s4.title[1]}</span></h1>
+        <p class="lead">{t.s4.sub}</p>
+        <div class="final-ctas">
+          <ArrowButton href={APP_SIGNUP_URL} variant="lime" label={t.s4.ctaPrimary} />
+          <WhatsAppButton message={t.s4.whatsappMsg} label={t.s4.ctaWhatsapp} variant="ghost" dark />
+        </div>
+        <p class="micro">{t.s4.micro}</p>
+        <p class="links">
+          <a href={localizedHomeAnchor("calculadora", locale)}>{t.s4.calcLink} →</a>
+          <a href={localizedHomeAnchor("pricing", locale)}>{t.s4.plansLink} →</a>
+        </p>
+      </div>
+      <div class="slide-visual">
+        <ul class="owner-cards">
+          {t.s4.cards.map((c, i) => (
+            <li style={`--i:${i}`}>
+              <span class="oc-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                  <path d={[
+                    "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM16 11l2 2 4-4",
+                    "M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2",
+                    "M3 3v18h18M7 15l4-4 3 3 5-6",
+                  ][i]} />
+                </svg>
+              </span>
+              <div><strong>{c.value}</strong><p>{c.text}</p></div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="demo-nav">
+    <button type="button" class="nav-btn ghost" data-prev disabled>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+      <span>{t.prev}</span>
+    </button>
+    <span class="keys">{t.keysHint}</span>
+    <button type="button" class="nav-btn ghost restart" data-restart hidden>{t.restart}</button>
+    <button type="button" class="nav-btn solid" data-next>
+      <span>{t.next}</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </button>
+  </footer>
+  <div class="confetti" data-confetti aria-hidden="true"></div>
+</div>
+
+<script>
+  function initDemo() {
+    const root = document.querySelector<HTMLElement>("[data-demo]");
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = "1";
+    const total = Number(root.dataset.visits) || 10;
+    const slides = Array.from(root.querySelectorAll<HTMLElement>("[data-slide]"));
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-goto]"));
+    const prev = root.querySelector<HTMLButtonElement>("[data-prev]")!;
+    const next = root.querySelector<HTMLButtonElement>("[data-next]")!;
+    const restart = root.querySelector<HTMLButtonElement>("[data-restart]")!;
+    const stampBtn = root.querySelector<HTMLButtonElement>("[data-stamp-btn]")!;
+    const bigpass = root.querySelector<HTMLElement>("[data-bigpass]")!;
+    const confetti = root.querySelector<HTMLElement>("[data-confetti]")!;
+    let step = 0;
+    let filled = 0;
+
+    const paintStamps = () => {
+      root.querySelectorAll<HTMLElement>("[data-st]").forEach((el, i) => el.classList.toggle("on", i < filled));
+      root.querySelector("[data-count]")!.textContent = String(filled);
+      root.querySelector("[data-left]")!.textContent = String(total - filled);
+      root.querySelector<HTMLElement>("[data-bar]")!.style.width = `${(filled / total) * 100}%`;
+      bigpass.classList.toggle("is-complete", filled >= total);
+      stampBtn.disabled = filled >= total;
+    };
+
+    const burst = () => {
+      const colors = ["#c7f979", "#fcf9f3", "#a8e04b", "#be954e"];
+      for (let i = 0; i < 90; i++) {
+        const p = document.createElement("i");
+        p.style.setProperty("--x", `${(Math.random() - 0.5) * 100}vw`);
+        p.style.setProperty("--y", `${-30 - Math.random() * 60}vh`);
+        p.style.setProperty("--r", `${Math.random() * 720 - 360}deg`);
+        p.style.setProperty("--d", `${1.4 + Math.random() * 1.4}s`);
+        p.style.background = colors[i % colors.length] ?? "#c7f979";
+        p.style.width = p.style.height = `${6 + Math.random() * 8}px`;
+        if (i % 3 === 0) p.style.borderRadius = "50%";
+        confetti.appendChild(p);
+        setTimeout(() => p.remove(), 3200);
+      }
+    };
+
+    const addStamp = () => {
+      if (filled >= total) return;
+      filled++;
+      paintStamps();
+      const el = root.querySelector<HTMLElement>(`[data-st="${filled - 1}"]`);
+      el?.classList.remove("pop");
+      void el?.offsetWidth;
+      el?.classList.add("pop");
+      if (filled >= total) burst();
+    };
+
+    const go = (i: number) => {
+      step = Math.max(0, Math.min(slides.length - 1, i));
+      slides.forEach((s, k) => {
+        s.classList.toggle("is-active", k === step);
+        s.classList.toggle("is-past", k < step);
+      });
+      dots.forEach((d, k) => {
+        d.classList.toggle("is-current", k === step);
+        d.classList.toggle("is-done", k < step);
+      });
+      prev.disabled = step === 0;
+      const last = step === slides.length - 1;
+      next.hidden = last;
+      restart.hidden = !last;
+      root.dataset.step = String(step);
+      window.scrollTo({ top: 0 });
+    };
+
+    prev.addEventListener("click", () => go(step - 1));
+    next.addEventListener("click", () => go(step + 1));
+    restart.addEventListener("click", () => {
+      filled = 0;
+      paintStamps();
+      go(0);
+    });
+    dots.forEach((d) => d.addEventListener("click", () => go(Number(d.dataset.goto))));
+    stampBtn.addEventListener("click", addStamp);
+    document.addEventListener("keydown", (e) => {
+      if (!document.body.contains(root)) return;
+      if (e.key === "ArrowRight" || e.key === "PageDown") go(step + 1);
+      else if (e.key === "ArrowLeft" || e.key === "PageUp") go(step - 1);
+      else if (e.key === " " && step === 2) {
+        e.preventDefault();
+        addStamp();
+      }
+    });
+    let sx = 0;
+    root.addEventListener("touchstart", (e) => (sx = e.touches[0]?.clientX ?? 0), { passive: true });
+    root.addEventListener("touchend", (e) => {
+      const dx = (e.changedTouches[0]?.clientX ?? sx) - sx;
+      if (Math.abs(dx) > 70) go(step + (dx < 0 ? 1 : -1));
+    }, { passive: true });
+    paintStamps();
+    go(0);
+  }
+  document.addEventListener("astro:page-load", initDemo);
+  initDemo();
+</script>
+
+<style>
+  .demo {
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    color: var(--reviko-cream);
+    background:
+      radial-gradient(60% 55% at 85% 10%, rgb(199 249 121 / 0.16), transparent 70%),
+      radial-gradient(50% 60% at 5% 100%, rgb(30 64 48 / 0.9), transparent 70%),
+      var(--reviko-green-deep);
+    overflow: hidden;
+    position: relative;
+  }
+  .demo-bar, .demo-nav {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 1.1rem var(--page-gutter);
+    position: relative; z-index: 3;
+  }
+  .demo-brand { display: flex; align-items: center; gap: 0.55rem; font-weight: 800; font-size: 1.35rem; letter-spacing: -0.04em; }
+  .demo-brand img { filter: brightness(0) invert(1); opacity: 0.95; }
+  .demo-brand em {
+    font-style: normal; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
+    background: var(--reviko-lime); color: var(--reviko-green); padding: 0.22rem 0.5rem; border-radius: 999px;
+  }
+  .demo-steps { list-style: none; display: flex; gap: 0.4rem; padding: 0; margin: 0; }
+  .demo-steps button {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: transparent; border: 1px solid rgb(252 249 243 / 0.16); color: rgb(252 249 243 / 0.6);
+    border-radius: 999px; padding: 0.35rem 0.85rem 0.35rem 0.35rem; font-weight: 700; font-size: 0.82rem;
+    transition: all 0.3s var(--ease-out);
+  }
+  .demo-steps .n {
+    width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+    background: rgb(252 249 243 / 0.12); font-size: 0.75rem;
+  }
+  .demo-steps .is-current { background: var(--reviko-lime); border-color: var(--reviko-lime); color: var(--reviko-green); }
+  .demo-steps .is-current .n { background: var(--reviko-green); color: var(--reviko-lime); }
+  .demo-steps .is-done { color: var(--reviko-lime); border-color: rgb(199 249 121 / 0.4); }
+  .demo-exit {
+    width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+    border: 1px solid rgb(252 249 243 / 0.2); color: rgb(252 249 243 / 0.8);
+  }
+  .demo-exit:hover { border-color: var(--reviko-lime); color: var(--reviko-lime); }
+
+  .demo-stage { position: relative; display: grid; }
+  .slide {
+    grid-area: 1 / 1;
+    display: grid; align-items: center; gap: clamp(1.5rem, 5vw, 5rem);
+    width: var(--container); margin-inline: auto; padding: 1rem 0 1.5rem;
+    opacity: 0; visibility: hidden; transform: translateX(60px);
+    transition: opacity 0.5s var(--ease-out), transform 0.6s var(--ease-out), visibility 0s 0.6s;
+  }
+  .slide.is-past { transform: translateX(-60px); }
+  .slide.is-active { opacity: 1; visibility: visible; transform: none; transition-delay: 0s, 0s, 0s; }
+  @media (min-width: 900px) { .slide { grid-template-columns: 1fr 1fr; } }
+
+  .kicker { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.26em; text-transform: uppercase; color: var(--reviko-lime-soft); }
+  h1 { margin-top: 1rem; font-size: clamp(2.6rem, 6.4vw, 6rem); line-height: 0.92; letter-spacing: -0.05em; }
+  .lime { color: var(--reviko-lime); }
+  .lead { margin-top: 1.4rem; max-width: 30rem; font-size: clamp(1.05rem, 1.5vw, 1.3rem); color: rgb(252 249 243 / 0.78); }
+  .pill-note {
+    margin-top: 1.5rem; display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 1px solid rgb(252 249 243 / 0.2); border-radius: 999px; padding: 0.5rem 0.95rem;
+    font-size: 0.88rem; font-weight: 700; color: var(--reviko-lime-soft);
+  }
+  .mobile-open { display: none; margin-top: 1.4rem; }
+  .slide-visual { display: grid; place-items: center; min-width: 0; }
+
+  /* Paso 1: QR */
+  .qr-wrap { position: relative; display: grid; justify-items: center; gap: 1.4rem; }
+  .ring { position: absolute; top: 44%; left: 50%; border-radius: 50%; border: 1px solid rgb(199 249 121 / 0.35); translate: -50% -50%; animation: ring 3.6s var(--ease-out) infinite; }
+  .r1 { width: 110%; aspect-ratio: 1; } .r2 { width: 110%; aspect-ratio: 1; animation-delay: 1.2s; } .r3 { width: 110%; aspect-ratio: 1; animation-delay: 2.4s; }
+  @keyframes ring { 0% { scale: 0.8; opacity: 0.9; } 100% { scale: 1.5; opacity: 0; } }
+  .qr-card {
+    position: relative; display: block; background: #fff; border-radius: 28px;
+    padding: clamp(1rem, 2vw, 1.6rem); width: min(400px, 74vw);
+    box-shadow: 0 50px 100px -40px rgb(0 0 0 / 0.8), 0 0 0 10px rgb(252 249 243 / 0.08);
+    overflow: hidden;
+  }
+  .qr-card img { width: 100%; height: auto; image-rendering: pixelated; }
+  .scanline {
+    position: absolute; left: 6%; right: 6%; height: 3px; top: 8%;
+    background: linear-gradient(90deg, transparent, var(--reviko-lime-deep), transparent);
+    box-shadow: 0 0 18px 4px rgb(168 224 75 / 0.6);
+    animation: scan 2.8s ease-in-out infinite;
+  }
+  @keyframes scan { 0%, 100% { top: 8%; } 50% { top: 90%; } }
+  .corner { position: absolute; width: 26px; height: 26px; border: 4px solid var(--reviko-lime-deep); z-index: 1; }
+  .tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; border-radius: 12px 0 0 0; }
+  .tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; border-radius: 0 12px 0 0; }
+  .bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; border-radius: 0 0 0 12px; }
+  .br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; border-radius: 0 0 12px 0; }
+  .qr-caption { display: flex; align-items: center; gap: 0.55rem; font-weight: 800; font-size: 1.05rem; color: var(--reviko-lime); position: relative; }
+
+  /* Paso 2: teléfono */
+  .checks { list-style: none; padding: 0; margin: 1.6rem 0 0; display: grid; gap: 0.7rem; font-weight: 700; }
+  .checks li { display: flex; align-items: center; gap: 0.7rem; }
+  .checks li::before {
+    content: ""; width: 24px; height: 24px; border-radius: 50%; flex: none;
+    background: var(--reviko-lime) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b2a1d' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 13 4.5 4.5L19 7'/%3E%3C/svg%3E") center / 14px no-repeat;
+  }
+  .phone {
+    width: min(310px, 76vw); aspect-ratio: 9 / 18.5; background: #0d1112; border-radius: 46px;
+    border: 3px solid rgb(252 249 243 / 0.22); padding: 0.9rem; display: flex; flex-direction: column;
+    box-shadow: 0 60px 120px -50px rgb(0 0 0 / 0.9);
+  }
+  .island { width: 92px; height: 24px; background: #000; border-radius: 999px; margin: 0 auto 1.2rem; border: 1px solid rgb(255 255 255 / 0.08); }
+  .wallet-stack { position: relative; flex: 1; }
+  .bank { position: absolute; left: 0; right: 0; height: 150px; border-radius: 16px; }
+  .b1 { top: 0; background: linear-gradient(135deg, #2d3a4f, #1b2230); }
+  .b2 { top: 42px; background: linear-gradient(135deg, #5a4526, #be954e); }
+  .pass {
+    position: absolute; left: 0; right: 0; top: 84px; border-radius: 16px; overflow: hidden;
+    background: var(--reviko-cream); color: var(--reviko-green);
+    box-shadow: 0 -10px 30px rgb(0 0 0 / 0.4);
+  }
+  .slide.is-active .pass-drop { animation: drop 1s 0.5s var(--ease-out) both; }
+  @keyframes drop { from { transform: translateY(-140%) rotate(-6deg); opacity: 0; } to { transform: none; opacity: 1; } }
+  .pass-head { display: flex; align-items: center; gap: 0.6rem; padding: 0.8rem 0.9rem; background: var(--reviko-green); color: var(--reviko-cream); }
+  .pass-head img { filter: brightness(0) invert(1); }
+  .pass-head div { display: grid; line-height: 1.15; }
+  .pass-head strong { font-size: 0.95rem; letter-spacing: -0.02em; }
+  .pass-head small { font-size: 0.68rem; opacity: 0.75; }
+  .pass-body { display: flex; justify-content: space-between; align-items: baseline; padding: 0.9rem; }
+  .pass-body small { font-size: 0.72rem; color: var(--reviko-sage); }
+  .pass-body strong { font-size: 1.5rem; letter-spacing: -0.04em; }
+  .pass-code {
+    margin: 0 0.9rem 0.9rem; height: 86px; border-radius: 10px; background:
+      repeating-linear-gradient(90deg, #0b2a1d 0 3px, transparent 3px 6px, #0b2a1d 6px 8px, transparent 8px 13px) center / 60% 62% no-repeat, #fff;
+  }
+  .wallet-btn {
+    margin-top: 0.8rem; background: #fff; color: #000; border-radius: 14px; text-align: center;
+    font-weight: 800; padding: 0.8rem; font-size: 0.92rem;
+  }
+  .wallet-btn { position: relative; }
+  .w-done { position: absolute; inset: 0; display: grid; place-items: center; color: var(--reviko-green); opacity: 0; }
+  .slide.is-active .wallet-btn { animation: added 0.4s 1.5s forwards; }
+  .slide.is-active .w-default { animation: fadeout 0.3s 1.5s forwards; }
+  .slide.is-active .w-done { animation: fadein 0.3s 1.6s forwards; }
+  @keyframes added { to { background: var(--reviko-lime); } }
+  @keyframes fadeout { to { opacity: 0; } }
+  @keyframes fadein { to { opacity: 1; } }
+
+  /* Paso 3: tarjeta grande */
+  .stamp-actions { margin-top: 1.8rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem; }
+  .stamp-actions .btn { font-size: 1.1rem; padding: 1.1rem 1.8rem; }
+  .stamp-actions .btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+  .stamp-actions .btn:hover svg { transform: rotate(90deg); }
+  .hint { font-size: 0.82rem; color: rgb(252 249 243 / 0.5); }
+  .mirror-note { margin-top: 1.4rem; font-size: 0.8rem; color: rgb(252 249 243 / 0.5); max-width: 26rem; }
+  .bigpass {
+    width: min(520px, 100%); background: var(--reviko-cream); color: var(--reviko-green);
+    border-radius: 28px; overflow: hidden; box-shadow: 0 60px 120px -50px rgb(0 0 0 / 0.9);
+    transition: box-shadow 0.5s, transform 0.5s var(--ease-out);
+  }
+  .bigpass.is-complete { box-shadow: 0 0 0 4px var(--reviko-lime), 0 0 90px rgb(199 249 121 / 0.45); transform: scale(1.02); }
+  .bigpass .pass-head { padding: 1.2rem 1.4rem; }
+  .bigpass .pass-head strong { font-size: 1.2rem; }
+  .bigpass .count { margin-left: auto; text-align: right; font-size: 1.1rem; font-weight: 800; display: grid; line-height: 1; }
+  .bigpass .count b { font-size: 2rem; color: var(--reviko-lime); display: inline; }
+  .bigpass .count small { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; margin-top: 0.3rem; }
+  .stamp-grid { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 0.7rem; padding: 1.5rem 1.4rem 1rem; }
+  .st {
+    aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+    border: 2px dashed rgb(11 42 29 / 0.25); color: rgb(11 42 29 / 0.3);
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+  }
+  .st svg { width: 46%; height: 46%; }
+  .st.on { background: var(--reviko-green); border: 2px solid var(--reviko-green); color: var(--reviko-lime); }
+  .st.pop { animation: pop 0.55s var(--ease-out); }
+  @keyframes pop { 0% { transform: scale(0.3) rotate(-30deg); } 60% { transform: scale(1.25) rotate(8deg); } 100% { transform: none; } }
+  .bar { margin: 0 1.4rem; height: 8px; border-radius: 999px; background: rgb(11 42 29 / 0.1); overflow: hidden; }
+  .bar span { display: block; height: 100%; width: 0; background: var(--reviko-lime-deep); border-radius: 999px; transition: width 0.5s var(--ease-out); }
+  .left { padding: 0.9rem 1.4rem 1.4rem; font-size: 0.95rem; color: var(--reviko-sage); }
+  .left b { color: var(--reviko-green); }
+  .unlocked { display: none; align-items: center; gap: 1rem; padding: 1.1rem 1.4rem 1.4rem; }
+  .is-complete .left { display: none; }
+  .is-complete .unlocked { display: flex; animation: rise 0.6s var(--ease-out); }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+  .gift-badge { width: 62px; height: 62px; border-radius: 18px; background: var(--reviko-lime); display: grid; place-items: center; flex: none; animation: wiggle 1.2s ease-in-out infinite; }
+  @keyframes wiggle { 0%, 100% { rotate: -6deg; } 50% { rotate: 6deg; } }
+  .unlocked div { display: grid; }
+  .unlocked strong { font-size: 1.5rem; letter-spacing: -0.04em; line-height: 1.1; }
+  .unlocked span:not(.gift-badge) { font-size: 0.92rem; color: var(--reviko-sage); }
+
+  /* Paso 4 */
+  .final-ctas { margin-top: 1.8rem; display: flex; flex-wrap: wrap; gap: 0.8rem; }
+  .final-ctas :global(.btn-lime) { font-size: 1.08rem; padding: 1.1rem 1.7rem; }
+  .micro { margin-top: 1.2rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--reviko-lime-soft); }
+  .links { margin-top: 1.1rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-weight: 700; font-size: 0.95rem; }
+  .links a { color: rgb(252 249 243 / 0.8); border-bottom: 1px solid rgb(252 249 243 / 0.3); }
+  .links a:hover { color: var(--reviko-lime); border-color: var(--reviko-lime); }
+  .owner-cards { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.9rem; width: min(460px, 100%); }
+  .owner-cards li {
+    display: flex; gap: 1rem; align-items: center;
+    background: rgb(252 249 243 / 0.07); border: 1px solid rgb(252 249 243 / 0.14);
+    border-radius: 22px; padding: 1.2rem 1.3rem; backdrop-filter: blur(6px);
+  }
+  .slide.is-active .owner-cards li { animation: rise 0.7s calc(0.25s + var(--i) * 0.18s) var(--ease-out) both; }
+  .owner-cards li:nth-child(2) { margin-left: clamp(0rem, 3vw, 2.5rem); }
+  .owner-cards li:nth-child(3) { margin-left: clamp(0rem, 6vw, 5rem); }
+  .oc-icon { width: 52px; height: 52px; border-radius: 16px; background: var(--reviko-lime); color: var(--reviko-green); display: grid; place-items: center; flex: none; }
+  .owner-cards strong { font-size: 1.3rem; letter-spacing: -0.03em; }
+  .owner-cards p { font-size: 0.92rem; color: rgb(252 249 243 / 0.72); }
+
+  /* Navegación inferior */
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 0.6rem; border-radius: 999px;
+    padding: 0.85rem 1.4rem; font-weight: 800; border: 1px solid rgb(252 249 243 / 0.25);
+    background: transparent; color: var(--reviko-cream); transition: all 0.25s var(--ease-out);
+  }
+  .nav-btn.solid { background: var(--reviko-cream); color: var(--reviko-green); border-color: var(--reviko-cream); }
+  .nav-btn.solid:hover { background: var(--reviko-lime); border-color: var(--reviko-lime); }
+  .nav-btn:disabled { opacity: 0.25; cursor: default; }
+  .nav-btn[hidden] { display: none; }
+  .keys { font-size: 0.78rem; color: rgb(252 249 243 / 0.4); margin-inline: auto; }
+  .restart { margin-left: auto; }
+
+  .confetti { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: hidden; }
+  .confetti :global(i) {
+    position: absolute; left: 50%; top: 60%; display: block;
+    animation: fly var(--d) cubic-bezier(0.15, 0.7, 0.3, 1) forwards;
+  }
+  @keyframes fly {
+    0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: translate(var(--x), calc(var(--y) + 90vh)) rotate(var(--r)); opacity: 0; }
+  }
+
+  @media (max-width: 899px) {
+    .demo-steps .l { display: none; }
+    .demo-steps button { padding: 0.3rem; }
+    .slide { align-content: start; padding-top: 0.5rem; gap: 1.6rem; transform: none; }
+    .slide:not(.is-active) { display: none; }
+    .slide.is-active { animation: rise 0.45s var(--ease-out); }
+    .demo-nav { position: sticky; bottom: 0; background: linear-gradient(transparent, var(--reviko-green-deep) 35%); }
+    .mobile-open { display: inline-flex; }
+    .keys { display: none; }
+    .demo-nav { padding-block: 0.8rem; }
+    .qr-card { width: min(260px, 64vw); }
+    .phone { width: min(240px, 62vw); }
+    .hint { display: none; }
+    .lead { margin-top: 1rem; }
+    .stamp-grid { gap: 0.5rem; padding: 1.1rem 1.1rem 0.8rem; }
+    .bigpass .count b { font-size: 1.5rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ring, .scanline { display: none; }
+  }
+</style>
