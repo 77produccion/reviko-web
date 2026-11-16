@@ -139,16 +139,13 @@ const es = {
     eyebrow: "Planes",
     title: ["Un plan por cada", "etapa de tu negocio."],
     sub: "Todos los planes incluyen 14 días gratis. Cancelas cuando quieras, sin permanencia.",
-    currencyNote:
-      "Se cobra en USD con tarjeta. El valor en pesos es aproximado y depende de la tasa del día.",
+    currencyNote: "Precios en dólares (USD). Pago mensual con tarjeta.",
     per: "/mes",
-    copPrefix: "≈ $",
-    copSuffix: " COP al mes",
     trialBadge: "14 días gratis",
     plans: [
       {
         id: "start",
-        name: "Start",
+        name: "Starter",
         kicker: "Para empezar",
         price: 12,
         blurb:
@@ -160,7 +157,7 @@ const es = {
           "Interacciones QR y NFC ilimitadas",
           "Métricas esenciales",
         ],
-        cta: "Probar Start",
+        cta: "Probar Starter",
       },
       {
         id: "pro",
@@ -313,11 +310,11 @@ const es = {
   final: {
     eyebrow: "Empieza ahora",
     title: ["Dales una razón", "para volver."],
-    sub: "Crea tu programa hoy y empieza a ver quién vuelve. Si prefieres que te lo dejemos montado, escríbenos.",
+    sub: "Crea tu programa hoy y empieza a ver quién vuelve. ¿Tienes dudas? Escríbenos y te mostramos cómo funciona.",
     stampsLabel: "Programa completado: recompensa desbloqueada",
     cta: "Prueba 14 días gratis",
     ctaWhatsapp: "Prefiero hablar por WhatsApp",
-    whatsappMsg: "Hola, quiero que me ayuden a montar reviko en mi negocio.",
+    whatsappMsg: "Hola, quiero ver cómo funciona reviko en mi negocio.",
     micro: "14 días gratis · Sin app extra · Cancelas cuando quieras",
   },
   legalChrome: {
@@ -451,16 +448,13 @@ const en: UIDict = {
     eyebrow: "Plans",
     title: ["A plan for every", "stage of your business."],
     sub: "Every plan includes a 14-day free trial. Cancel anytime, no commitment.",
-    currencyNote:
-      "Billed in USD by card. The COP amount is approximate and depends on the daily exchange rate.",
+    currencyNote: "Prices in US dollars (USD). Billed monthly by card.",
     per: "/mo",
-    copPrefix: "≈ $",
-    copSuffix: " COP per month",
     trialBadge: "14 days free",
     plans: [
       {
         id: "start",
-        name: "Start",
+        name: "Starter",
         kicker: "To get started",
         price: 12,
         blurb:
@@ -472,7 +466,7 @@ const en: UIDict = {
           "Unlimited QR and NFC interactions",
           "Essential metrics",
         ],
-        cta: "Try Start",
+        cta: "Try Starter",
       },
       {
         id: "pro",
@@ -620,11 +614,11 @@ const en: UIDict = {
   final: {
     eyebrow: "Get started",
     title: ["Give them a reason", "to come back."],
-    sub: "Create your program today and start seeing who comes back. Rather have us set it up for you? Message us.",
+    sub: "Create your program today and start seeing who comes back. Questions? Message us and we'll show you how it works.",
     stampsLabel: "Completed program: reward unlocked",
     cta: "Start 14-day free trial",
     ctaWhatsapp: "I'd rather chat on WhatsApp",
-    whatsappMsg: "Hi, I'd like help setting up reviko in my business.",
+    whatsappMsg: "Hi, I'd like to see how reviko works for my business.",
     micro: "14 days free · No extra app · Cancel anytime",
   },
   legalChrome: {

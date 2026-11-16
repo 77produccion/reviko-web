@@ -4,7 +4,7 @@
 import Eyebrow from "../components/Eyebrow.astro";
 import ArrowButton from "../components/ArrowButton.astro";
 import type { Locale } from "../i18n/config";
-import { APP_SIGNUP_URL, usdToCop, formatCop } from "../i18n/config";
+import { APP_SIGNUP_URL, formatNumber } from "../i18n/config";
 import { growth } from "../i18n/growth";
 
 export interface Props {
@@ -14,10 +14,10 @@ const { locale = "es" } = Astro.props;
 const t = growth[locale].calculator;
 
 /* Valores por defecto: barbería/cafetería típica del Eje Cafetero */
-const defaults = { customers: 300, ticket: 25000, rate: 15 };
-const proCop = usdToCop(20);
+const defaults = { customers: 300, ticket: 8, rate: 15 };
+const proUsd = 20; /* plan Pro, USD/mes */
 const extra = Math.round(defaults.customers * (defaults.rate / 100) * defaults.ticket);
-const roi = Math.round(extra / proCop);
+const roi = Math.round(extra / proUsd);
 ---
 
 <section class="calc" id="calculadora" aria-labelledby="calc-title">
@@ -37,23 +37,23 @@ const roi = Math.round(extra / proCop);
       class="calc-card on-dark"
       data-calc
       data-locale={locale}
-      data-pro-cop={proCop}
+      data-pro-usd={proUsd}
       data-reveal="scale"
     >
       <div class="calc-fields">
         <label class="field">
           <span class="field-top">
             <span>{t.customers}</span>
-            <output data-out="customers">{formatCop(defaults.customers, locale)}</output>
+            <output data-out="customers">{formatNumber(defaults.customers, locale)}</output>
           </span>
           <input type="range" min="50" max="1500" step="10" value={defaults.customers} data-in="customers" />
         </label>
         <label class="field">
           <span class="field-top">
             <span>{t.ticket}</span>
-            <output data-out="ticket">${formatCop(defaults.ticket, locale)}</output>
+            <output data-out="ticket">${formatNumber(defaults.ticket, locale)}</output>
           </span>
-          <input type="range" min="5000" max="150000" step="1000" value={defaults.ticket} data-in="ticket" />
+          <input type="range" min="2" max="100" step="1" value={defaults.ticket} data-in="ticket" />
         </label>
         <label class="field">
           <span class="field-top">
@@ -67,16 +67,16 @@ const roi = Math.round(extra / proCop);
       <div class="calc-result" aria-live="polite">
         <p class="result-label">{t.resultLabel}</p>
         <p class="result-value">
-          <span class="cur">$</span><span data-out="extra">{formatCop(extra, locale)}</span>
-          <span class="cop">COP</span>
+          <span class="cur">$</span><span data-out="extra">{formatNumber(extra, locale)}</span>
+          <span class="cop">USD</span>
         </p>
         <p class="result-year">
-          ≈ $<span data-out="year">{formatCop(extra * 12, locale)}</span> COP {t.resultYear}
+          ≈ $<span data-out="year">{formatNumber(extra * 12, locale)}</span> USD {t.resultYear}
         </p>
         <div class="result-compare">
           <div>
             <p class="mini-label">{t.costLabel}</p>
-            <p class="mini-value">${formatCop(proCop, locale)}<small>{t.perMonth}</small></p>
+            <p class="mini-value">${formatNumber(proUsd, locale)}<small>{t.perMonth}</small></p>
           </div>
           <div class="roi">
             <p class="mini-label">{t.roiLabel}</p>
@@ -97,7 +97,7 @@ const roi = Math.round(extra / proCop);
       if (card.dataset.ready) return;
       card.dataset.ready = "1";
       const locale = card.dataset.locale === "en" ? "en-US" : "es-CO";
-      const proCop = Number(card.dataset.proCop) || 64000;
+      const proUsd = Number(card.dataset.proUsd) || 20;
       const fmt = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 });
       const input = (k: string) => card.querySelector<HTMLInputElement>(`[data-in="${k}"]`)!;
       const out = (k: string) => card.querySelector<HTMLElement>(`[data-out="${k}"]`);
@@ -134,7 +134,7 @@ const roi = Math.round(extra / proCop);
         out("ticket")!.textContent = `$${fmt.format(ticket)}`;
         out("rate")!.textContent = `${rate}%`;
         out("year")!.textContent = fmt.format(extra * 12);
-        out("roi")!.textContent = fmt.format(Math.max(0, Math.round(extra / proCop)));
+        out("roi")!.textContent = fmt.format(Math.max(0, Math.round(extra / proUsd)));
         ["customers", "ticket", "rate"].forEach((k) => paintRange(input(k)));
         if (animate) animateTo(extra);
         else {

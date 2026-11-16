@@ -8,24 +8,18 @@ export interface FaqItem {
   a: string;
 }
 
-export interface FounderPerk {
-  icon: "setup" | "kit" | "content" | "chat";
-  title: string;
-  text: string;
-}
-
 const es = {
   calculator: {
     eyebrow: "Calculadora",
     title: ["¿Cuánto vale un", "cliente que vuelve?"],
     sub: "Mueve los valores con los números de tu negocio. La mayoría de los dueños se sorprende: con que unos pocos clientes vuelvan una vez más al mes, reviko ya se pagó.",
     customers: "Clientes distintos al mes",
-    ticket: "Ticket promedio (COP)",
+    ticket: "Ticket promedio (USD)",
     returnRate: "Clientes que vuelven una vez más al mes",
     resultLabel: "Ventas extra al mes",
     resultYear: "al año",
     costLabel: "reviko Pro te cuesta",
-    roiLabel: "Por cada peso invertido recuperas",
+    roiLabel: "Por cada dólar invertido recuperas",
     roiSuffix: "x",
     disclaimer:
       "Cálculo ilustrativo. El resultado real depende de tu negocio, tu recompensa y qué tan seguido tu equipo registra las visitas.",
@@ -37,40 +31,6 @@ const es = {
     text: "Pet shops, panaderías, gimnasios, heladerías… Si tus clientes vuelven, reviko funciona.",
     cta: "Cuéntanos de tu negocio",
     whatsappMsg: "Hola, tengo un negocio y quiero saber si reviko me sirve.",
-  },
-  founders: {
-    eyebrow: "Negocios fundadores",
-    title: ["Te lo dejamos", "funcionando."],
-    sub: "Para los primeros 50 negocios en Colombia, el arranque corre por nuestra cuenta. Sin costo adicional a tu plan.",
-    perks: [
-      {
-        icon: "setup",
-        title: "Montaje hecho por nosotros",
-        text: "Creamos tu programa, diseñamos tu tarjeta con tu marca y capacitamos a tu equipo en 15 minutos.",
-      },
-      {
-        icon: "kit",
-        title: "Kit de mostrador",
-        text: "Display con tu código QR y sticker NFC para que tus clientes se unan con un toque.",
-      },
-      {
-        icon: "content",
-        title: "Piezas para tus redes",
-        text: "Te entregamos publicaciones listas para anunciar tu programa a tus propios clientes.",
-      },
-      {
-        icon: "chat",
-        title: "Acompañamiento por WhatsApp",
-        text: "Durante el primer mes revisamos contigo cómo va y ajustamos la recompensa si hace falta.",
-      },
-    ] as FounderPerk[],
-    cta: "Quiero ser negocio fundador",
-    whatsappMsg: "Hola, quiero ser negocio fundador de reviko.",
-    standTitle: "Escanea y acumula",
-    standSub: "Tu próxima visita cuenta",
-    standShop: "Barbería La 14",
-    standNfc: "Acerca tu celular",
-    counterLabel: "cupos de fundador",
   },
   faq: {
     eyebrow: "Preguntas frecuentes",
@@ -86,7 +46,7 @@ const es = {
       },
       {
         q: "¿Cuánto tarda en estar funcionando?",
-        a: "Unos minutos. Creas tu programa, eliges la recompensa (por ejemplo, el 9.º corte gratis) y pones el código QR en tu mostrador. Si quieres, te lo dejamos montado nosotros.",
+        a: "Unos minutos. Creas tu programa, eliges la recompensa (por ejemplo, el 9.º corte gratis) y pones el código QR en tu mostrador. Si tienes dudas, te acompañamos por WhatsApp.",
       },
       {
         q: "¿Necesito comprar equipos o un sistema de caja?",
@@ -106,7 +66,7 @@ const es = {
       },
       {
         q: "¿Cómo se paga?",
-        a: "Con tarjeta débito o crédito, mes a mes. El cobro se hace en dólares (USD) y tu banco lo convierte a pesos.",
+        a: "Con tarjeta débito o crédito, mes a mes. Los precios y el cobro son en dólares (USD).",
       },
     ] as FaqItem[],
     asideTitle: "¿Otra pregunta?",
@@ -129,12 +89,12 @@ const en: GrowthDict = {
     title: ["What is a returning", "customer worth?"],
     sub: "Plug in your own numbers. Most owners are surprised: if just a few customers come back one more time a month, reviko has already paid for itself.",
     customers: "Unique customers per month",
-    ticket: "Average ticket (COP)",
+    ticket: "Average ticket (USD)",
     returnRate: "Customers who come back one more time a month",
     resultLabel: "Extra sales per month",
     resultYear: "per year",
     costLabel: "reviko Pro costs you",
-    roiLabel: "For every peso invested you get back",
+    roiLabel: "For every dollar invested you get back",
     roiSuffix: "x",
     disclaimer:
       "Illustrative estimate. Real results depend on your business, your reward and how consistently your team logs visits.",
@@ -146,40 +106,6 @@ const en: GrowthDict = {
     text: "Pet shops, bakeries, gyms, ice-cream parlors… If your customers come back, reviko works.",
     cta: "Tell us about your business",
     whatsappMsg: "Hi, I run a business and want to know if reviko fits.",
-  },
-  founders: {
-    eyebrow: "Founding businesses",
-    title: ["We set it up", "for you."],
-    sub: "For the first 50 businesses in Colombia, onboarding is on us. No extra cost on top of your plan.",
-    perks: [
-      {
-        icon: "setup",
-        title: "Done-for-you setup",
-        text: "We create your program, design your branded card and train your team in 15 minutes.",
-      },
-      {
-        icon: "kit",
-        title: "Counter kit",
-        text: "A display with your QR code and an NFC sticker so customers join with one tap.",
-      },
-      {
-        icon: "content",
-        title: "Social media assets",
-        text: "Ready-to-post pieces to announce your program to your own customers.",
-      },
-      {
-        icon: "chat",
-        title: "WhatsApp support",
-        text: "During the first month we check in with you and tweak your reward if needed.",
-      },
-    ] as FounderPerk[],
-    cta: "I want to be a founding business",
-    whatsappMsg: "Hi, I'd like to be a reviko founding business.",
-    standTitle: "Scan and collect",
-    standSub: "Your next visit counts",
-    standShop: "Barbería La 14",
-    standNfc: "Tap your phone",
-    counterLabel: "founder spots",
   },
   faq: {
     eyebrow: "FAQ",
@@ -195,7 +121,7 @@ const en: GrowthDict = {
       },
       {
         q: "How long does it take to get going?",
-        a: "A few minutes. Create your program, choose the reward (say, the 9th haircut free) and put the QR code on your counter. Or let us set it up for you.",
+        a: "A few minutes. Create your program, choose the reward (say, the 9th haircut free) and put the QR code on your counter. Questions? We help you on WhatsApp.",
       },
       {
         q: "Do I need to buy hardware or a POS?",
@@ -215,7 +141,7 @@ const en: GrowthDict = {
       },
       {
         q: "How do I pay?",
-        a: "By debit or credit card, month to month. You're billed in US dollars (USD) and your bank converts it to your currency.",
+        a: "By debit or credit card, month to month. Prices and billing are in US dollars (USD).",
       },
     ] as FaqItem[],
     asideTitle: "Another question?",

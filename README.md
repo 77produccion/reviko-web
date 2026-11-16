@@ -35,12 +35,11 @@ Los placeholders actuales mantienen proporción y se sustituyen 1:1.
 Alineadas con la estrategia de marketing de reviko:
 
 - `src/sections/Calculator.astro` — calculadora "¿cuánto vale un cliente que vuelve?" (JS vanilla, sin dependencias)
-- `src/sections/Founders.astro` — oferta "Negocios fundadores" (montaje, kit de mostrador, piezas, acompañamiento)
 - `src/sections/Faq.astro` — preguntas frecuentes (también se publican como datos estructurados FAQPage)
 - `src/components/WhatsAppFloat.astro` + `WhatsAppButton.astro` — CTAs a WhatsApp
 - Copy de estas secciones: `src/i18n/growth.ts` (ES/EN)
-- Número de WhatsApp, tasa COP/USD y helpers: `src/i18n/config.ts` (`WHATSAPP_NUMBER`, `COP_PER_USD`)
-- Planes: los `id` (`start`, `pro`, `ultimate`) coinciden con los lookup keys de Stripe y viajan al registro como `?plan=`
+- Número de WhatsApp y helpers: `src/i18n/config.ts` (`WHATSAPP_NUMBER`). Todos los precios en USD.
+- Planes Starter, Pro y Ultimate: los `id` (`start`, `pro`, `ultimate`) coinciden con los lookup keys de Stripe y viajan al registro como `?plan=`
 - Imagen para compartir en redes/WhatsApp: `public/og-reviko.jpg` (1200×630)
 
 ## Rutas legales

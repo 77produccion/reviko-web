@@ -25,20 +25,13 @@ export function whatsappLink(message: string): string {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
-/** Tasa de referencia COP por USD para mostrar precios aproximados en pesos.
- *  Stripe cobra en USD; esto es solo orientativo. Revisar cada trimestre. */
-export const COP_PER_USD = 3200;
-
-/** Convierte USD a COP redondeado al millar más cercano. */
-export function usdToCop(usd: number): number {
-  return Math.round((usd * COP_PER_USD) / 1000) * 1000;
-}
-
-export function formatCop(value: number, locale: "es" | "en" = "es"): string {
+/** Formato de cifras en USD sin decimales. */
+export function formatNumber(value: number, locale: "es" | "en" = "es"): string {
   return new Intl.NumberFormat(locale === "es" ? "es-CO" : "en-US", {
     maximumFractionDigits: 0,
   }).format(value);
 }
+
 
 export function localizedPath(path: string, locale: Locale): string {
   if (locale === DEFAULT_LOCALE) return path;
