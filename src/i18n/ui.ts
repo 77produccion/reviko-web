@@ -68,6 +68,7 @@ const es = {
     sub: "Tu tarjeta de sellos, ahora en el celular de tus clientes. Sabes quién vuelve, quién se perdió y le das una razón para regresar.",
     ctaSecondary: "Hablemos por WhatsApp",
     whatsappMsg: "Hola, quiero conocer reviko para mi negocio.",
+    videoLabel: "Video: un cliente escanea el código, guarda su tarjeta en Wallet, acumula sellos y gana su premio",
     micro: "Clientes de hoy. Más visitas mañana.",
     trust: ["14 días gratis", "Tus clientes no descargan nada", "Listo en minutos"],
     imgAlt:
@@ -382,6 +383,7 @@ const en: UIDict = {
     sub: "Your stamp card, now on your customers' phones. Know who comes back, who drifted away, and give them a reason to return.",
     ctaSecondary: "Chat on WhatsApp",
     whatsappMsg: "Hi, I'd like to learn about reviko for my business.",
+    videoLabel: "Video: a customer scans the code, saves the card to Wallet, collects stamps and earns the reward",
     micro: "Today's customers. More visits tomorrow.",
     trust: ["14 days free", "No app for your customers", "Ready in minutes"],
     imgAlt:
