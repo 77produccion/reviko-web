@@ -26,7 +26,7 @@ const t = ui[locale].pricing;
 
     <div class="pricing-cards" data-pricing-cards>
       {t.plans.map((plan) => (
-        <article class:list={["plan", plan.featured && "featured"]}>
+        <article class:list={["plan", plan.featured && "featured"]} data-plan={plan.id}>
           <div class="plan-top">
             <p class="plan-kicker">{plan.kicker}</p>
             {plan.badge && <span class="plan-badge">{plan.badge}</span>}
@@ -34,8 +34,9 @@ const t = ui[locale].pricing;
           <h3 class="plan-name">{plan.name}</h3>
           <p class="plan-price">
             <span class="currency">$</span>{plan.price}
-            <span class="per">/mes</span>
+            <span class="per">USD{t.per}</span>
           </p>
+          <p class="plan-trial">{t.trialBadge}</p>
           <p class="plan-blurb">{plan.blurb}</p>
           <ul class="plan-features">
             {plan.features.map((feature) => (
@@ -64,7 +65,7 @@ const t = ui[locale].pricing;
           </ul>
           <div class="plan-cta">
             <ArrowButton
-              href={APP_SIGNUP_URL}
+              href={`${APP_SIGNUP_URL}?plan=${plan.id}`}
               variant={plan.featured ? "lime" : "primary"}
               label={plan.cta}
             />
@@ -211,6 +212,18 @@ const t = ui[locale].pricing;
     letter-spacing: 0;
     color: var(--reviko-sage);
     margin-left: 0.35rem;
+  }
+  .plan-trial {
+    justify-self: start;
+    align-self: flex-start;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--reviko-green);
+    background: rgb(199 249 121 / 0.45);
+    border-radius: var(--radius-pill);
+    padding: 0.3rem 0.65rem;
   }
   .plan-blurb {
     color: var(--reviko-sage);
