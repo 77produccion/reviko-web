@@ -307,10 +307,7 @@ const gift = "M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7s-1.5-5-4.5-5S4 7 12 7ZM12 
     display: grid;
     grid-template-rows: auto 1fr auto;
     color: var(--reviko-ink);
-    background:
-      radial-gradient(55% 50% at 88% 8%, rgb(199 249 121 / 0.35), transparent 70%),
-      radial-gradient(45% 50% at 0% 100%, rgb(199 249 121 / 0.18), transparent 70%),
-      #fff;
+    background: #fff;
     overflow: hidden;
     position: relative;
   }
@@ -370,20 +367,19 @@ const gift = "M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7s-1.5-5-4.5-5S4 7 12 7ZM12 
 
   /* Paso 1: QR */
   .qr-wrap { position: relative; display: grid; justify-items: center; gap: 1.4rem; }
-  .ring { position: absolute; top: 44%; left: 50%; border-radius: 50%; border: 1px solid rgb(168 224 75 / 0.7); translate: -50% -50%; animation: ring 3.6s var(--ease-out) infinite; }
+  .ring { position: absolute; top: 44%; left: 50%; border-radius: 50%; border: 1px solid rgb(11 42 29 / 0.16); translate: -50% -50%; animation: ring 3.6s var(--ease-out) infinite; }
   .r1 { width: 110%; aspect-ratio: 1; } .r2 { width: 110%; aspect-ratio: 1; animation-delay: 1.2s; } .r3 { width: 110%; aspect-ratio: 1; animation-delay: 2.4s; }
   @keyframes ring { 0% { scale: 0.8; opacity: 0.9; } 100% { scale: 1.5; opacity: 0; } }
   .qr-card {
     position: relative; display: block; background: #fff; border-radius: 28px;
     padding: clamp(1rem, 2vw, 1.6rem); width: min(400px, 74vw);
-    box-shadow: 0 40px 80px -40px rgb(11 42 29 / 0.45), 0 0 0 1px rgb(11 42 29 / 0.1), 0 0 0 10px rgb(199 249 121 / 0.35);
+    box-shadow: 0 40px 80px -40px rgb(11 42 29 / 0.45), 0 0 0 1px rgb(11 42 29 / 0.12);
     overflow: hidden;
   }
   .qr-card img { width: 100%; height: auto; image-rendering: pixelated; }
   .scanline {
     position: absolute; left: 6%; right: 6%; height: 3px; top: 8%;
     background: linear-gradient(90deg, transparent, var(--reviko-lime-deep), transparent);
-    box-shadow: 0 0 18px 4px rgb(168 224 75 / 0.6);
     animation: scan 2.8s ease-in-out infinite;
   }
   @keyframes scan { 0%, 100% { top: 8%; } 50% { top: 90%; } }
@@ -455,7 +451,7 @@ const gift = "M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7s-1.5-5-4.5-5S4 7 12 7ZM12 
     border-radius: 28px; overflow: hidden; box-shadow: 0 0 0 1px rgb(11 42 29 / 0.1), 0 50px 90px -50px rgb(11 42 29 / 0.5);
     transition: box-shadow 0.5s, transform 0.5s var(--ease-out);
   }
-  .bigpass.is-complete { box-shadow: 0 0 0 4px var(--reviko-lime), 0 0 90px rgb(199 249 121 / 0.45); transform: scale(1.02); }
+  .bigpass.is-complete { box-shadow: 0 0 0 4px var(--reviko-lime-deep), 0 50px 90px -50px rgb(11 42 29 / 0.5); transform: scale(1.02); }
   .bigpass .pass-head { padding: 1.2rem 1.4rem; }
   .bigpass .pass-head strong { font-size: 1.2rem; }
   .bigpass .count { margin-left: auto; text-align: right; font-size: 1.1rem; font-weight: 800; display: grid; line-height: 1; }
