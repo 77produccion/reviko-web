@@ -1,0 +1,11 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import DemoStage from "../../sections/DemoStage.astro";
+import { demo } from "../../i18n/demo";
+const locale = "en" as const;
+---
+
+<BaseLayout locale={locale} basePath="/demo" title={demo[locale].metaTitle} description={demo[locale].metaDescription}>
+  <meta name="robots" content="noindex, nofollow" slot="head" />
+  <DemoStage locale={locale} />
+</BaseLayout>

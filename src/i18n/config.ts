@@ -16,6 +16,23 @@ export const APP_URL = "https://app.reviko.io";
 /** Alta de nuevos negocios / registro en la app. */
 export const APP_SIGNUP_URL = `${APP_URL}/registro`;
 
+/** WhatsApp comercial de reviko (formato internacional, solo dígitos).
+ *  TODO(Jordan): confirmar que este es el número de ventas de reviko. */
+export const WHATSAPP_NUMBER = "573148490955";
+
+/** Enlace wa.me con mensaje prellenado. */
+export function whatsappLink(message: string): string {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+/** Formato de cifras en USD sin decimales. */
+export function formatNumber(value: number, locale: "es" | "en" = "es"): string {
+  return new Intl.NumberFormat(locale === "es" ? "es-CO" : "en-US", {
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+
 export function localizedPath(path: string, locale: Locale): string {
   if (locale === DEFAULT_LOCALE) return path;
   return path === "/" ? "/en/" : `/en${path}`;
