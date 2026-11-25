@@ -1,0 +1,153 @@
+---
+/* "Tu cliente no descarga nada. Tú sí tienes una app de verdad."
+   Diferenciador frente a competidores que son solo web app. */
+import Eyebrow from "../components/Eyebrow.astro";
+import StoreBadges from "../components/StoreBadges.astro";
+import type { Locale } from "../i18n/config";
+import { growth } from "../i18n/growth";
+
+export interface Props {
+  locale?: Locale;
+}
+const { locale = "es" } = Astro.props;
+const t = growth[locale].ownerApp;
+const es = locale === "es";
+const feed = es
+  ? [
+      { n: "Laura M.", d: "Sello 6 de 8", t: "hace 2 min" },
+      { n: "Andrés P.", d: "Premio reclamado", t: "hace 18 min", prize: true },
+      { n: "Camila R.", d: "Nueva tarjeta", t: "hace 1 h" },
+    ]
+  : [
+      { n: "Laura M.", d: "Stamp 6 of 8", t: "2 min ago" },
+      { n: "Andrés P.", d: "Reward claimed", t: "18 min ago", prize: true },
+      { n: "Camila R.", d: "New card", t: "1 h ago" },
+    ];
+---
+
+<section class="owner" id="app" aria-labelledby="owner-title">
+  <div class="container owner-grid">
+    <div class="owner-copy">
+      <Eyebrow>{t.eyebrow}</Eyebrow>
+      <h2 id="owner-title" class="display-sm" data-lines>
+        {t.title.map((line, i) => (
+          <span class="line"><span class={i === 1 ? "accent" : undefined}>{line}</span></span>
+        ))}
+      </h2>
+      <p class="owner-sub" data-reveal>{t.sub}</p>
+      <ul class="owner-points" data-stagger>
+        {t.points.map((p) => (
+          <li>
+            <strong>{p.title}</strong>
+            <span>{p.text}</span>
+          </li>
+        ))}
+      </ul>
+      <div data-reveal><StoreBadges locale={locale} /></div>
+    </div>
+
+    <div class="owner-visual" data-reveal="scale" aria-hidden="true">
+      <div class="device">
+        <div class="notch"></div>
+        <div class="app-head">
+          <span class="brand">reviko</span>
+          <span class="shop">{es ? "Barbería Central" : "Central Barbershop"}</span>
+        </div>
+        <div class="scan">
+          <div class="scan-frame">
+            <span></span><span></span><span></span><span></span>
+            <div class="scan-line"></div>
+          </div>
+          <p>{es ? "Escanea la tarjeta del cliente" : "Scan the customer's card"}</p>
+        </div>
+        <div class="kpis">
+          <div><b>38</b><small>{es ? "visitas hoy" : "visits today"}</small></div>
+          <div><b>71%</b><small>{es ? "vuelven" : "return"}</small></div>
+        </div>
+        <ul class="feed">
+          {feed.map((f) => (
+            <li>
+              <span class:list={["dot", f.prize && "prize"]}></span>
+              <span class="who"><b>{f.n}</b><small>{f.d}</small></span>
+              <span class="when">{f.t}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .owner {
+    padding: var(--section-space) 0;
+    background: var(--reviko-cream);
+    border-top: 1px solid rgb(11 42 29 / 0.08);
+  }
+  .owner-grid { display: grid; gap: clamp(2.5rem, 6vw, 4.5rem); align-items: center; }
+  .owner-copy .display-sm { margin-top: 1rem; color: var(--reviko-ink); }
+  .owner-copy .accent { color: var(--reviko-green); }
+  .owner-sub { margin-top: 1.2rem; max-width: 32rem; color: var(--reviko-sage); font-size: 1.06rem; }
+  .owner-points { list-style: none; padding: 0; margin: 1.6rem 0 1.8rem; display: grid; gap: 0.9rem; }
+  .owner-points li {
+    display: grid; gap: 0.15rem; padding-left: 1.1rem;
+    border-left: 3px solid var(--reviko-lime);
+  }
+  .owner-points strong { color: var(--reviko-green); font-size: 1rem; }
+  .owner-points span { color: var(--reviko-sage); font-size: 0.95rem; }
+
+  .owner-visual { display: grid; place-items: center; }
+  .device {
+    width: min(320px, 86vw);
+    background: var(--reviko-card, #fffdf8);
+    border: 1px solid rgb(11 42 29 / 0.14);
+    border-radius: 38px;
+    padding: 0.9rem 0.9rem 1.1rem;
+    box-shadow: 0 40px 80px -40px rgb(11 42 29 / 0.45);
+    display: grid;
+    gap: 0.8rem;
+  }
+  .notch { width: 96px; height: 20px; border-radius: 999px; background: var(--reviko-ink); margin: 0 auto 0.2rem; }
+  .app-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    background: var(--reviko-green); color: var(--reviko-cream);
+    border-radius: 18px; padding: 0.85rem 1rem;
+  }
+  .brand { font-weight: 800; letter-spacing: -0.04em; font-size: 1.15rem; }
+  .shop { font-size: 0.76rem; opacity: 0.85; }
+  .scan { display: grid; justify-items: center; gap: 0.5rem; padding: 0.4rem 0; }
+  .scan p { font-size: 0.78rem; font-weight: 700; color: var(--reviko-green); }
+  .scan-frame { position: relative; width: 132px; height: 132px; border-radius: 16px; background: var(--reviko-cream-2); overflow: hidden; }
+  .scan-frame > span { position: absolute; width: 26px; height: 26px; border: 4px solid var(--reviko-green); }
+  .scan-frame > span:nth-child(1) { top: 10px; left: 10px; border-right: 0; border-bottom: 0; border-radius: 8px 0 0 0; }
+  .scan-frame > span:nth-child(2) { top: 10px; right: 10px; border-left: 0; border-bottom: 0; border-radius: 0 8px 0 0; }
+  .scan-frame > span:nth-child(3) { bottom: 10px; left: 10px; border-right: 0; border-top: 0; border-radius: 0 0 0 8px; }
+  .scan-frame > span:nth-child(4) { bottom: 10px; right: 10px; border-left: 0; border-top: 0; border-radius: 0 0 8px 0; }
+  .scan-line {
+    position: absolute; left: 14px; right: 14px; height: 3px; border-radius: 3px;
+    background: var(--reviko-lime-deep); box-shadow: 0 0 12px var(--reviko-lime);
+    animation: scan 2.4s ease-in-out infinite;
+  }
+  @keyframes scan { 0%, 100% { top: 18px; } 50% { top: calc(100% - 21px); } }
+  @media (prefers-reduced-motion: reduce) { .scan-line { animation: none; top: 50%; } }
+  .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .kpis div { background: var(--reviko-cream-2); border-radius: 14px; padding: 0.65rem 0.8rem; display: grid; }
+  .kpis b { font-size: 1.35rem; letter-spacing: -0.03em; color: var(--reviko-green); }
+  .kpis small { font-size: 0.7rem; color: var(--reviko-sage); font-weight: 600; }
+  .feed { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.15rem; }
+  .feed li {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 0.6rem; align-items: center;
+    padding: 0.55rem 0.3rem; border-bottom: 1px solid rgb(11 42 29 / 0.07);
+  }
+  .feed li:last-child { border-bottom: 0; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--reviko-green); }
+  .dot.prize { background: var(--reviko-lime-deep); box-shadow: 0 0 0 3px rgb(199 249 121 / 0.45); }
+  .who { display: grid; line-height: 1.2; }
+  .who b { font-size: 0.82rem; color: var(--reviko-ink); }
+  .who small { font-size: 0.72rem; color: var(--reviko-sage); }
+  .when { font-size: 0.68rem; color: var(--reviko-sage); }
+
+  @media (min-width: 980px) {
+    .owner-grid { grid-template-columns: 1.1fr 0.9fr; }
+  }
+</style>

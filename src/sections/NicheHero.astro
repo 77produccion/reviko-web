@@ -1,0 +1,155 @@
+---
+/* Hero + dolores + ideas de premio de una landing de nicho (/para/<nicho>). */
+import Eyebrow from "../components/Eyebrow.astro";
+import ArrowButton from "../components/ArrowButton.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+import RewardProgress from "../components/RewardProgress.astro";
+import { APP_SIGNUP_URL } from "../i18n/config";
+import type { Niche } from "../i18n/niches";
+
+export interface Props {
+  niche: Niche;
+}
+const { niche } = Astro.props;
+const signup = `${APP_SIGNUP_URL}?nicho=${niche.key}`;
+---
+
+<section class="hero nhero" aria-labelledby="nhero-title" data-section="nicho-hero">
+  <div class="container nhero-grid">
+    <div class="nhero-copy">
+      <div data-hero="eyebrow"><Eyebrow>{niche.eyebrow}</Eyebrow></div>
+      <h1 id="nhero-title" class="display" data-lines aria-label={niche.title.join(" ")}>
+        {niche.title.map((line, i) => (
+          <span class="line"><span class={i === 1 ? "accent" : undefined}>{line}</span></span>
+        ))}
+      </h1>
+      <p class="sub" data-hero="sub">{niche.sub}</p>
+      <div class="ctas" data-hero="ctas">
+        <ArrowButton href={signup} variant="primary" label="Prueba 14 días gratis" />
+        <WhatsAppButton message={niche.whatsappMsg} label="Hablemos por WhatsApp" variant="ghost" />
+      </div>
+      <ul class="trust-row" data-hero="micro">
+        <li>14 días gratis</li>
+        <li>Tus clientes no descargan nada</li>
+        <li>Desde USD 0,40 al día</li>
+      </ul>
+    </div>
+
+    <div class="nhero-visual" data-hero="visual">
+      <figure class="photo">
+        <img src={niche.image} alt={niche.imageAlt} width="800" height="1000" loading="eager" decoding="async" fetchpriority="high" />
+      </figure>
+      <div class="pass">
+        <p class="pass-top"><span class="brand">reviko</span><span>{niche.reward.label}</span></p>
+        <RewardProgress
+          total={niche.reward.total}
+          filled={niche.reward.filled}
+          icon={niche.reward.icon}
+          animate={false}
+          label={niche.reward.caption}
+        />
+        <p class="pass-caption">{niche.reward.caption}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="npains" aria-labelledby="npains-title">
+  <div class="container">
+    <h2 id="npains-title" class="display-sm" data-lines>
+      <span class="line"><span>¿Te suena?</span></span>
+    </h2>
+    <div class="pain-grid" data-stagger>
+      {niche.pains.map((p) => (
+        <article class="pain">
+          <h3>{p.title}</h3>
+          <p>{p.text}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="ideas on-dark" data-reveal>
+      <p class="ideas-title">{niche.ideasTitle}</p>
+      <ul class="ideas-list">
+        {niche.ideas.map((idea) => <li>{idea}</li>)}
+      </ul>
+      <p class="ideas-foot">Tú eliges el premio. Lo cambias cuando quieras desde la app.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .nhero {
+    padding: calc(var(--header-h) + 2.5rem) 0 3.5rem;
+    position: relative;
+    overflow: clip;
+  }
+  .nhero-grid { display: grid; gap: clamp(2rem, 5vw, 3rem); align-items: center; }
+  .display .accent { color: var(--reviko-green); position: relative; }
+  .display .accent::after {
+    content: ""; position: absolute; left: 0; right: 6%; bottom: 6%;
+    height: 0.14em; background: var(--reviko-lime); z-index: -1; border-radius: 4px;
+  }
+  .sub { margin-top: 1.1rem; max-width: 34rem; color: var(--reviko-sage); font-size: 1.08rem; }
+  .ctas { margin-top: 1.8rem; display: flex; flex-wrap: wrap; gap: 0.8rem; }
+  .trust-row { margin-top: 1.4rem; }
+
+  .nhero-visual { position: relative; width: 100%; max-width: 34rem; justify-self: center; }
+  .photo { margin: 0; aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; border: 1px solid rgb(11 42 29 / 0.12); }
+  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pass {
+    position: absolute; left: -0.5rem; right: auto; bottom: -1.2rem;
+    width: min(330px, 88%);
+    background: var(--reviko-card, #fffdf8);
+    border: 1px solid rgb(11 42 29 / 0.14);
+    border-radius: 22px; padding: 1rem 1.1rem 1.1rem;
+    box-shadow: 0 30px 60px -30px rgb(11 42 29 / 0.5);
+    display: grid; gap: 0.6rem;
+  }
+  .pass-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    background: var(--reviko-green); color: var(--reviko-cream);
+    border-radius: 14px; padding: 0.6rem 0.85rem; font-size: 0.78rem; font-weight: 700;
+  }
+  .pass-top .brand { font-weight: 800; font-size: 1rem; letter-spacing: -0.04em; }
+  .pass-caption { font-size: 0.84rem; font-weight: 800; color: var(--reviko-green); text-align: center; }
+
+  .npains { padding: clamp(4.5rem, 9vw, 6.5rem) 0 var(--section-space); background: var(--reviko-cream-2); }
+  .npains .display-sm { color: var(--reviko-ink); text-align: center; }
+  .pain-grid { margin-top: 2.2rem; display: grid; gap: 1rem; }
+  .pain {
+    background: var(--reviko-card, #fffdf8); border: 1px solid rgb(11 42 29 / 0.1);
+    border-radius: 20px; padding: 1.4rem 1.4rem 1.5rem;
+  }
+  .pain h3 { font-size: 1.08rem; color: var(--reviko-green); letter-spacing: -0.01em; }
+  .pain p { margin-top: 0.45rem; color: var(--reviko-sage); font-size: 0.95rem; }
+  .ideas {
+    margin-top: 1.6rem; background: var(--reviko-green); color: var(--reviko-cream);
+    border-radius: 24px; padding: clamp(1.4rem, 3vw, 2rem);
+  }
+  .ideas-title { font-weight: 800; font-size: 1.15rem; color: var(--reviko-lime); }
+  .ideas-list { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.6rem; }
+  .ideas-list li { display: flex; gap: 0.6rem; align-items: center; font-weight: 700; }
+  .ideas-list li::before {
+    content: ""; flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--reviko-lime);
+  }
+  .ideas-foot { margin-top: 1rem; font-size: 0.86rem; opacity: 0.8; }
+
+  @media (min-width: 760px) {
+    .pain-grid { grid-template-columns: repeat(3, 1fr); }
+    .ideas-list { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 980px) {
+    .nhero { min-height: 92svh; display: flex; align-items: center; }
+    .nhero-grid { grid-template-columns: 1.05fr 0.95fr; }
+    .nhero-visual { justify-self: end; }
+    .pass { left: -2.5rem; }
+  }
+  @media (max-width: 639px) {
+    .nhero { padding: calc(var(--header-h) + 1.5rem) 0 3.5rem; }
+    .display { font-size: clamp(2.8rem, 13vw, 4.2rem); }
+    .ctas { flex-direction: column; align-items: flex-start; gap: 0.65rem; }
+    .trust-row { flex-direction: column; font-size: 0.84rem; }
+    .pass { left: 0.5rem; }
+  }
+</style>

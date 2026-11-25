@@ -1,0 +1,71 @@
+---
+/* Botones de App Store y Google Play. Si aún no hay enlace configurado,
+   se muestran como sello informativo (sin enlace) para no llevar a un 404. */
+import type { Locale } from "../i18n/config";
+import { APP_STORE_URL, PLAY_STORE_URL } from "../i18n/config";
+import { growth } from "../i18n/growth";
+
+export interface Props {
+  locale?: Locale;
+  dark?: boolean;
+}
+const { locale = "es", dark = false } = Astro.props;
+const t = growth[locale].ownerApp;
+const stores = [
+  { key: "app-store", href: APP_STORE_URL, copy: t.appStore },
+  { key: "google-play", href: PLAY_STORE_URL, copy: t.playStore },
+];
+---
+
+<div class:list={["stores", dark && "is-dark"]}>
+  {stores.map((s) => {
+    const Tag = s.href ? "a" : "span";
+    return (
+      <Tag
+        class="store"
+        href={s.href || undefined}
+        target={s.href ? "_blank" : undefined}
+        rel={s.href ? "noopener" : undefined}
+        data-track={s.href ? `store-${s.key}` : undefined}
+      >
+        {s.key === "app-store" ? (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.72-1.35-.14-2.64.8-3.33.8-.69 0-1.74-.78-2.86-.76-1.47.02-2.83.86-3.59 2.17-1.53 2.65-.39 6.58 1.1 8.73.73 1.05 1.6 2.23 2.73 2.19 1.1-.04 1.51-.71 2.84-.71 1.32 0 1.7.71 2.85.69 1.18-.02 1.93-1.07 2.65-2.13.84-1.22 1.18-2.4 1.2-2.46-.03-.01-2.3-.88-2.32-3.49ZM14.2 6.13c.6-.73 1.01-1.75.9-2.76-.87.04-1.92.58-2.54 1.31-.56.65-1.05 1.69-.92 2.69.97.07 1.96-.5 2.56-1.24Z" />
+          </svg>
+        ) : (
+          <svg width="20" height="22" viewBox="0 0 24 26" aria-hidden="true">
+            <path d="M3.6 1.3 14.2 12 3.6 22.7c-.4-.2-.6-.6-.6-1.1V2.4c0-.5.2-.9.6-1.1Z" fill="#34A853" />
+            <path d="m17.6 8.6-3.4 3.4 3.4 3.4 4-2.3c1-.6 1-1.6 0-2.2l-4-2.3Z" fill="#FBBC04" />
+            <path d="M3.6 1.3c.3-.2.8-.2 1.3.1l12.7 7.2-3.4 3.4L3.6 1.3Z" fill="#4285F4" />
+            <path d="M14.2 12l3.4 3.4-12.7 7.2c-.5.3-1 .3-1.3.1L14.2 12Z" fill="#EA4335" />
+          </svg>
+        )}
+        <span class="txt">
+          <small>{s.copy.small}</small>
+          <strong>{s.copy.big}</strong>
+        </span>
+      </Tag>
+    );
+  })}
+</div>
+
+<style>
+  .stores { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+  .store {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 1.05rem 0.55rem 0.85rem;
+    border-radius: 12px;
+    background: var(--reviko-ink);
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    transition: transform 0.2s ease;
+  }
+  a.store:hover { transform: translateY(-2px); }
+  .is-dark .store { background: #000; }
+  .txt { display: grid; line-height: 1.05; }
+  .txt small { font-size: 0.66rem; font-weight: 600; opacity: 0.8; }
+  .txt strong { font-size: 1.02rem; font-weight: 800; letter-spacing: -0.01em; }
+</style>

@@ -9,12 +9,14 @@ import { growth } from "../i18n/growth";
 
 export interface Props {
   locale?: Locale;
+  /** Valores iniciales (las landings de nicho traen los de su oficio) */
+  defaults?: { customers: number; ticket: number; rate: number };
 }
 const { locale = "es" } = Astro.props;
 const t = growth[locale].calculator;
 
 /* Valores por defecto: barbería/cafetería típica del Eje Cafetero */
-const defaults = { customers: 300, ticket: 8, rate: 15 };
+const defaults = Astro.props.defaults ?? { customers: 300, ticket: 8, rate: 15 };
 const proUsd = 20; /* plan Pro, USD/mes */
 const extra = Math.round(defaults.customers * (defaults.rate / 100) * defaults.ticket);
 const roi = Math.round(extra / proUsd);
