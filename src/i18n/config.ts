@@ -13,6 +13,17 @@ export const HOME_PATH = "/";
 /** Aplicación web de reviko (app.reviko.io). */
 export const APP_URL = "https://app.reviko.io";
 
+/** Meta Pixel de la web ("Reviko Web (reviko.io)", portafolio Reviko Loyalty).
+ *  Se puede cambiar con la variable PUBLIC_META_PIXEL_ID; vacío = sin píxel. */
+export const META_PIXEL_ID: string =
+  import.meta.env.PUBLIC_META_PIXEL_ID ?? "3640697042764387";
+
+/** Fichas de la app del negocio en las tiendas. */
+export const APP_STORE_URL: string =
+  import.meta.env.PUBLIC_APP_STORE_URL ?? "https://apps.apple.com/co/app/reviko/id6828564419";
+export const PLAY_STORE_URL: string =
+  import.meta.env.PUBLIC_PLAY_STORE_URL ?? "https://play.google.com/store/apps/details?id=io.reviko.app";
+
 /** Alta de nuevos negocios / registro en la app. */
 export const APP_SIGNUP_URL = `${APP_URL}/registro`;
 

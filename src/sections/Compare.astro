@@ -1,0 +1,110 @@
+---
+/* Comparativa: tarjeta de papel vs. apps para descargar vs. reviko. */
+import Eyebrow from "../components/Eyebrow.astro";
+import ArrowButton from "../components/ArrowButton.astro";
+import type { Locale } from "../i18n/config";
+import { APP_SIGNUP_URL } from "../i18n/config";
+import { growth } from "../i18n/growth";
+
+export interface Props {
+  locale?: Locale;
+}
+const { locale = "es" } = Astro.props;
+const t = growth[locale].compare;
+type Mark = "yes" | "no" | "partial";
+---
+
+<section class="compare" id="comparar" aria-labelledby="compare-title">
+  <div class="container">
+    <div class="compare-head">
+      <Eyebrow center>{t.eyebrow}</Eyebrow>
+      <h2 id="compare-title" class="display-sm" data-lines>
+        {t.title.map((line) => (
+          <span class="line"><span>{line}</span></span>
+        ))}
+      </h2>
+    </div>
+
+    <div class="table-wrap" data-reveal>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col"><span class="sr-only">—</span></th>
+            {t.cols.map((c, i) => (
+              <th scope="col" class:list={[i === 2 && "us"]}>{c}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {t.rows.map((row) => (
+            <tr>
+              <th scope="row">{row.label}</th>
+              {row.v.map((v, i) => (
+                <td class:list={[i === 2 && "us"]}>
+                  <span class:list={["mark", v as Mark]} title={t.legend[v as Mark]}>
+                    <span class="sr-only">{t.legend[v as Mark]}</span>
+                  </span>
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="compare-foot" data-reveal>
+      <p>{t.foot}</p>
+      <ArrowButton href={APP_SIGNUP_URL} variant="primary" label={t.cta} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .compare {
+    padding: var(--section-space) 0;
+    background: var(--reviko-cream-2);
+    border-top: 1px solid rgb(11 42 29 / 0.08);
+  }
+  .compare-head { text-align: center; display: grid; justify-items: center; gap: 1rem; margin-bottom: 2.5rem; }
+  .compare-head .display-sm { color: var(--reviko-ink); }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table {
+    width: 100%; max-width: 920px; margin: 0 auto;
+    border-collapse: separate; border-spacing: 0;
+    background: var(--reviko-card, #fffdf8);
+    border: 1px solid rgb(11 42 29 / 0.1);
+    border-radius: 22px; overflow: hidden;
+    min-width: 560px;
+  }
+  th, td { padding: 0.95rem 1rem; text-align: center; border-bottom: 1px solid rgb(11 42 29 / 0.07); }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+  thead th { font-size: 0.82rem; font-weight: 800; color: var(--reviko-sage); letter-spacing: 0.02em; }
+  tbody th { text-align: left; font-weight: 700; color: var(--reviko-ink); font-size: 0.95rem; }
+  .us { background: var(--reviko-green); color: var(--reviko-cream) !important; }
+  thead .us { color: var(--reviko-lime) !important; font-size: 1rem; }
+  .mark { display: inline-block; width: 26px; height: 26px; border-radius: 50%; vertical-align: middle; }
+  .mark.yes {
+    background: var(--reviko-lime)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b2a1d' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 13 4.5 4.5L19 7'/%3E%3C/svg%3E")
+      center / 15px no-repeat;
+  }
+  .mark.no {
+    background: rgb(11 42 29 / 0.07)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6d62' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M7 7l10 10M17 7 7 17'/%3E%3C/svg%3E")
+      center / 13px no-repeat;
+  }
+  .mark.partial {
+    background: rgb(11 42 29 / 0.07)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6d62' stroke-width='2.8' stroke-linecap='round'%3E%3Cpath d='M7 12h10'/%3E%3C/svg%3E")
+      center / 13px no-repeat;
+  }
+  .compare-foot {
+    margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1rem 1.5rem;
+    align-items: center; justify-content: center; text-align: center;
+  }
+  .compare-foot p { font-weight: 800; color: var(--reviko-green); font-size: 1.05rem; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+</style>

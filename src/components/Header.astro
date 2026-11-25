@@ -7,10 +7,15 @@ import LanguageSwitcher from "./LanguageSwitcher.astro";
 export interface Props {
   locale?: Locale;
   basePath?: string;
+  /** false en páginas sin versión en inglés */
+  showLang?: boolean;
+  /** Menú propio (las landings de nicho no tienen todas las secciones del home) */
+  nav?: { label: string; href: string }[];
 }
 
-const { locale = "es", basePath = "/" } = Astro.props;
+const { locale = "es", basePath = "/", showLang = true } = Astro.props;
 const t = ui[locale];
+const navItems = Astro.props.nav ?? t.nav;
 ---
 
 <header class="site-header" id="top">
@@ -32,10 +37,10 @@ const t = ui[locale];
       <span class="wordmark">reviko</span>
     </a>
     <nav class="nav" aria-label={t.navLabel}>
-      {t.nav.map((l) => <a href={l.href}>{l.label}</a>)}
+      {navItems.map((l) => <a href={l.href}>{l.label}</a>)}
     </nav>
     <div class="actions">
-      <LanguageSwitcher locale={locale} basePath={basePath} />
+      {showLang && <LanguageSwitcher locale={locale} basePath={basePath} />}
       <a href={APP_URL} class="login desktop-action">{t.login}</a>
       <a href={APP_SIGNUP_URL} class="btn btn-primary btn-sm desktop-action">
         <span>{t.ctaStartShort}</span>
@@ -56,7 +61,7 @@ const t = ui[locale];
       </button>
     </div>
     <nav class="drawer-nav" aria-label={t.navLabel}>
-      {t.nav.map((l) => <a href={l.href}>{l.label}</a>)}
+      {navItems.map((l) => <a href={l.href}>{l.label}</a>)}
       <a href={APP_URL} class="drawer-login">{t.login}</a>
       <a href={APP_SIGNUP_URL} class="btn btn-lime drawer-cta">
         <span>{t.ctaStart}</span>

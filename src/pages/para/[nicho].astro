@@ -1,0 +1,52 @@
+---
+/* Landings por nicho para la pauta de Meta: /para/barberias, /para/unas-y-estetica,
+   /para/restaurantes, /para/cafeterias. Solo español. */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import NicheHero from "../../sections/NicheHero.astro";
+import HowItWorks from "../../sections/HowItWorks.astro";
+import OwnerApp from "../../sections/OwnerApp.astro";
+import Calculator from "../../sections/Calculator.astro";
+import Compare from "../../sections/Compare.astro";
+import Pricing from "../../sections/Pricing.astro";
+import Faq from "../../sections/Faq.astro";
+import FinalCta from "../../sections/FinalCta.astro";
+import WhatsAppFloat from "../../components/WhatsAppFloat.astro";
+import { NICHES, type Niche } from "../../i18n/niches";
+
+export function getStaticPaths() {
+  return NICHES.map((niche) => ({ params: { nicho: niche.slug }, props: { niche } }));
+}
+
+const { niche } = Astro.props as { niche: Niche };
+const locale = "es" as const;
+const basePath = `/para/${niche.slug}`;
+const nav = [
+  { label: "Cómo funciona", href: "#how-it-works" },
+  { label: "Calculadora", href: "#calculadora" },
+  { label: "Planes", href: "#pricing" },
+  { label: "Preguntas", href: "#faq" },
+];
+---
+
+<BaseLayout
+  locale={locale}
+  basePath={basePath}
+  title={niche.metaTitle}
+  description={niche.metaDescription}
+  view={`nicho-${niche.key}`}
+  alternates={false}
+>
+  <Header locale={locale} basePath={basePath} showLang={false} nav={nav} />
+  <main id="contenido">
+    <NicheHero niche={niche} />
+    <HowItWorks locale={locale} />
+    <Calculator locale={locale} defaults={niche.calc} />
+    <OwnerApp locale={locale} />
+    <Compare locale={locale} />
+    <Pricing locale={locale} />
+    <Faq locale={locale} />
+    <FinalCta locale={locale} />
+  </main>
+  <WhatsAppFloat locale={locale} />
+</BaseLayout>

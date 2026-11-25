@@ -10,6 +10,12 @@ export interface Props {
 }
 const { locale = "es" } = Astro.props;
 const t = ui[locale].pricing;
+/* Costo diario promedio del año (12 meses / 365 días), redondeado hacia arriba */
+const perDay = (price: number) =>
+  new Intl.NumberFormat(locale === "es" ? "es-CO" : "en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(Math.ceil(((price * 12) / 365) * 100) / 100);
 ---
 
 <section class="pricing on-dark" id="pricing" aria-labelledby="pricing-title">
@@ -36,6 +42,7 @@ const t = ui[locale].pricing;
             <span class="currency">$</span>{plan.price}
             <span class="per">USD{t.per}</span>
           </p>
+          <p class="plan-day">{t.perDay(perDay(plan.price))}</p>
           <p class="plan-trial">{t.trialBadge}</p>
           <p class="plan-blurb">{plan.blurb}</p>
           <ul class="plan-features">
@@ -79,6 +86,12 @@ const t = ui[locale].pricing;
 </section>
 
 <style>
+  .plan-day {
+    margin-top: -0.35rem;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--reviko-green);
+  }
   .pricing {
     position: relative;
     padding: var(--section-space) 0;

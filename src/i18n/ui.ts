@@ -70,7 +70,7 @@ const es = {
     whatsappMsg: "Hola, quiero conocer reviko para mi negocio.",
     videoLabel: "Video: un cliente escanea el código, guarda su tarjeta en Wallet, acumula sellos y gana su premio",
     micro: "Clientes de hoy. Más visitas mañana.",
-    trust: ["14 días gratis", "Tus clientes no descargan nada", "Listo en minutos"],
+    trust: ["14 días gratis", "Tus clientes no descargan nada", "Desde USD 0,40 al día", "App en App Store y Google Play"],
     imgAlt:
       "Barista entregando un café con arte latte a una clienta en una cafetería cálida",
     chipA: "1 visita para tu premio",
@@ -142,6 +142,7 @@ const es = {
     sub: "Todos los planes incluyen 14 días gratis. Cancelas cuando quieras, sin permanencia.",
     currencyNote: "Precios en dólares (USD). Pago mensual con tarjeta.",
     per: "/mes",
+    perDay: (usd: string) => `Menos de USD ${usd} al día`,
     trialBadge: "14 días gratis",
     plans: [
       {
@@ -385,7 +386,7 @@ const en: UIDict = {
     whatsappMsg: "Hi, I'd like to learn about reviko for my business.",
     videoLabel: "Video: a customer scans the code, saves the card to Wallet, collects stamps and earns the reward",
     micro: "Today's customers. More visits tomorrow.",
-    trust: ["14 days free", "No app for your customers", "Ready in minutes"],
+    trust: ["14 days free", "No app for your customers", "From USD 0.40 a day", "App on the App Store and Google Play"],
     imgAlt:
       "Barista handing a latte with latte art to a customer in a warm café",
     chipA: "1 visit to your reward",
@@ -452,6 +453,7 @@ const en: UIDict = {
     sub: "Every plan includes a 14-day free trial. Cancel anytime, no commitment.",
     currencyNote: "Prices in US dollars (USD). Billed monthly by card.",
     per: "/mo",
+    perDay: (usd: string) => `Less than USD ${usd} a day`,
     trialBadge: "14 days free",
     plans: [
       {
