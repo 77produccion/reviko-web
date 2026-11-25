@@ -18,10 +18,11 @@ export const APP_URL = "https://app.reviko.io";
 export const META_PIXEL_ID: string =
   import.meta.env.PUBLIC_META_PIXEL_ID ?? "3640697042764387";
 
-/** Fichas de la app del negocio en las tiendas. Vacío = no se muestra el botón.
- *  TODO(Jordan): pegar aquí los enlaces reales de App Store y Google Play. */
-export const APP_STORE_URL: string = import.meta.env.PUBLIC_APP_STORE_URL ?? "";
-export const PLAY_STORE_URL: string = import.meta.env.PUBLIC_PLAY_STORE_URL ?? "";
+/** Fichas de la app del negocio en las tiendas. */
+export const APP_STORE_URL: string =
+  import.meta.env.PUBLIC_APP_STORE_URL ?? "https://apps.apple.com/co/app/reviko/id6828564419";
+export const PLAY_STORE_URL: string =
+  import.meta.env.PUBLIC_PLAY_STORE_URL ?? "https://play.google.com/store/apps/details?id=io.reviko.app";
 
 /** Alta de nuevos negocios / registro en la app. */
 export const APP_SIGNUP_URL = `${APP_URL}/registro`;

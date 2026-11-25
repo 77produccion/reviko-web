@@ -98,4 +98,4 @@ Textos en `src/i18n/niches.ts`. Cada anuncio de Meta debe apuntar a la de su nic
 ## Enlaces de App Store y Google Play
 
 `APP_STORE_URL` y `PLAY_STORE_URL` en `src/i18n/config.ts` (o `PUBLIC_APP_STORE_URL` /
-`PUBLIC_PLAY_STORE_URL`). Mientras estén vacíos, los botones se muestran sin enlace.
+`PUBLIC_PLAY_STORE_URL`). Si se dejan vacíos, los botones se muestran sin enlace.
